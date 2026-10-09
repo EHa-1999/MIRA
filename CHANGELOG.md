@@ -2,6 +2,14 @@
 
 Het versienummer staat in `VERSION`. Bij elke nieuwe versie: nummer ophogen, hier een regel toevoegen, `python3 build.py` draaien.
 
+## Versie 28 · 09-10-2026
+- Anonimiseren bij de bron is een voorvertoning totdat de opsteller haar bevestigt. In de module staat bovenaan de status, met de knop Bevestig de anonimisering. Vóór de bevestiging hebben de plaatshouders een gestippelde rand, in de module en in de weergave voor een inwoner, en staat er Voorvertoning bij.
+- Onterechte treffers laat je staan met Laat staan; wat het programma heeft gemist, voeg je toe door tekst te selecteren. Elke wijziging na de bevestiging maakt er weer een voorvertoning van.
+- Overzicht meldt het zolang de anonimisering niet is bevestigd.
+
+## Versie 27 · 09-10-2026
+- Een inwoner ziet persoonsgegevens niet meer onbeschermd. Wat bij de bron is geanonimiseerd, verschijnt in de lezersweergave als plaatshouder, ook als het stuk nog niet is beoordeeld. Na Beoordelen staan de gelakte passages er met hun weigeringsgrond. De toelichting naast het stuk zegt hoeveel gegevens zijn afgeschermd. Voor de ontvanger van een e-mail verandert niets: die krijgt het bericht zoals het is verzonden.
+
 ## Versie 26 · 09-10-2026
 - De naam MIRA staat alleen nog in de titel van de pagina en in het colofon. Bij Wie zegt dat? en in de voorbeeldberichten staat weer Assistent, en het lemma in de begrippenlijst is vervallen.
 

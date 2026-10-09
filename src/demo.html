@@ -592,6 +592,8 @@ h1,h2,h3,h4,p{margin:0}
 .plh{font-family:var(--mono);font-size:.82em;padding:1px 5px;border-radius:4px;cursor:pointer;border:1px solid transparent;white-space:nowrap;font-style:normal;font-weight:500}
 .plh.l1{background:var(--green-soft);color:var(--green)}.plh.l2{background:var(--amber-soft);color:var(--amber)}.plh.l3{background:var(--red-soft);color:var(--red)}
 .plh.dec{background:transparent;border-color:currentColor;font-family:inherit;font-size:inherit;white-space:normal}
+.plh.ro{cursor:default}
+.plh.pv{border:1px dashed currentColor}
 .plh.on,.phn.on{outline:2px solid var(--accent);outline-offset:1px}
 .phn{border-bottom:1px dotted var(--muted);cursor:pointer}
 .finding .bas{font-size:11.5px;color:var(--muted);margin-left:auto}
@@ -1209,7 +1211,7 @@ function hx(id){
     if(S.rv.show==='gelakt')return dec==='lak'?red(h,a):esc(h.t);
     return '<mark class="rm s-'+(dec||'open')+(S.hsel===id?' on':'')+'" id="rm-'+id+'" data-act="rvgo" data-id="'+id+'"><sup>'+h.n+'</sup>'+esc(h.t)+'</mark>';
   }
-  if(S.viewer==='lezer')return (Lt(h.ty)>=3&&a.applied&&dec==='lak')?red(h,a):esc(h.t);
+  if(S.viewer==='lezer'){if(Lt(h.ty)>=3&&a.applied&&dec==='lak')return red(h,a);if(brRead(h.ty)&&BR(h.ty).on[id])return brRo(brItems(h.ty).filter(function(x){return x.id===id})[0]);return esc(h.t)}
   if(h.ty===S.type&&brOn())return brSpan(brItems().filter(function(x){return x.id===id})[0]);
   if(assist()&&S.tab==='anon')return '<span class="pii'+(S.hsel===id?' on':'')+'" id="h-'+id+'" data-act="hit" data-id="'+id+'">'+esc(h.t)+'</span>';
   return esc(h.t);
@@ -1264,11 +1266,15 @@ function brItems(t){
   return o;
 }
 function isDs(){return S.type==='rekenblad'&&D('rekenblad').sheet===1&&S.viewer!=='lezer'}
+function brRead(t){t=t||S.type;return S.viewer==='lezer'&&t!=='mail'&&Lt(t)>=3}
+function brOk(t){return !!BR(t).ok}
+function brRo(p){return '<span class="plh l'+p.ppl+' ro'+(brOk()?'':' pv')+'">'+p.ph+'</span>'}
+function brShown(t){t=t||S.type;var a=AN(t);return brItems(t).filter(function(p){var h=HIT[p.id],c=h&&h.k?D(t).comp[h.k]:null;return p.on&&!p.hid&&!(a.applied&&a.dec[p.id]==='lak')&&!(h&&h.k==='saldo'&&c&&known(c,t))}).length}
 function brOn(){return assist()&&S.tab==='anon'&&AN().sub==='bron'&&!isDs()}
 function brSpan(p){
   var b=BR(),dec=p.ppl<=b.ppl;
   if(!p.on)return '<span class="phn'+(b.exp===p.id?' on':'')+'" data-act="brexp" data-id="'+p.id+'">'+esc(p.org)+'</span>';
-  return '<span class="plh l'+p.ppl+(dec?' dec':'')+(b.exp===p.id?' on':'')+'" id="ph-'+p.id+'" data-act="brtog" data-id="'+p.id+'" tabindex="0" role="button"'+(dec?' data-notr':'')+'>'+(dec?esc(p.org):p.ph)+'</span>';
+  return '<span class="plh l'+p.ppl+(dec?' dec':'')+(b.ok?'':' pv')+(b.exp===p.id?' on':'')+'" id="ph-'+p.id+'" data-act="brtog" data-id="'+p.id+'" tabindex="0" role="button"'+(dec?' data-notr':'')+'>'+(dec?esc(p.org):p.ph)+'</span>';
 }
 function brGuess(x){
   var t=x.toLowerCase();
@@ -1299,16 +1305,18 @@ var BRL=[['PPL 0','Geen persoonsgegevens zichtbaar.'],['PPL 1','Gewone persoonsg
 function brHtml(){
   var b=BR(),its=brItems(),on=its.filter(function(x){return x.on}),vis=on.filter(function(x){return x.ppl<=b.ppl}).length;
   var pick=b.pick?'<div class="finding selc"><div class="fh"><span class="pill p-teal">Selectie</span><b data-notr>“'+esc(b.pick.t)+'”</b></div><div class="brpick"><select class="inp" id="br-ty" aria-label="Soort persoonsgegeven">'+Object.keys(BRT).map(function(k){return '<option value="'+k+'"'+(k===b.pick.ty?' selected':'')+'>'+k+' (art. '+BRT[k][0]+')</option>'}).join('')+'</select><button class="btn sm primary" data-act="bradd">Anonimiseer</button><button class="btn sm" data-act="brcancel">Annuleer</button></div></div>':'';
-  return '<div class="form"><div class="accstate ok"><b>'+on.length+' geanonimiseerd, '+vis+' zichtbaar op dit niveau</b><span>Elk persoonsgegeven is vervangen door een plaatshouder. De waarde zelf is versleuteld bewaard; wie het niveau heeft, ziet het origineel.</span></div>'+
+  var st=b.ok?'<div class="accstate ok"><b>Anonimisering bevestigd</b><span><span data-notr>'+esc(b.ok.by)+' · '+b.ok.at+'</span></span><span>Een wijziging maakt er weer een voorvertoning van.</span></div>':
+    '<div class="accstate warn"><b>Voorvertoning, nog niet bevestigd</b><span>Dit is wat het programma voorstelt. Laat staan wat onterecht is gemarkeerd, voeg toe wat is gemist, en bevestig daarna.</span><div class="rowb" style="justify-content:flex-start;margin-top:4px"><button class="btn primary sm" data-act="brok">Bevestig de anonimisering</button></div></div>';
+  return '<div class="form">'+st+'<div class="accstate off"><b>'+on.length+' geanonimiseerd, '+vis+' zichtbaar op dit niveau</b><span>Elk persoonsgegeven is vervangen door een plaatshouder. De waarde zelf is versleuteld bewaard; wie het niveau heeft, ziet het origineel.</span></div>'+
     '<div class="ctl"><span>Bekijk op niveau</span><div class="seg" role="group">'+BRL.map(function(x,i){return '<button aria-pressed="'+(b.ppl===i)+'" data-act="brppl" data-v="'+i+'" data-notr>'+x[0]+'</button>'}).join('')+'</div></div><p class="hint">'+BRL[b.ppl][1]+' Het niveau volgt uit de autorisatie van wie kijkt.</p>'+pick+
     '<div class="form" style="padding:0;gap:6px">'+its.map(brCard).join('')+'</div>'+
     '<p class="hint">Selecteer tekst in het document om zelf iets te anonimiseren. De soort wordt geraden; je kunt haar aanpassen.</p></div>';
 }
 function brManual(){
-  if(!brOn())return;var root=document.querySelector('.wd-desk');if(!root)return;
+  var ro=brRead();if(!brOn()&&!ro)return;var root=document.querySelector('.wd-desk');if(!root)return;
   brItems().filter(function(p){return p.man}).forEach(function(p){var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),n;
     while((n=w.nextNode())){var pe=n.parentElement;if(!pe||pe.closest('.plh,.phn,.rul,.lg,.tag,.callout,button,.fx'))continue;var i=n.nodeValue.indexOf(p.org);if(i<0)continue;
-      var r=document.createRange();r.setStart(n,i);r.setEnd(n,i+p.org.length);var t=document.createElement('template');t.innerHTML=brSpan(p);var el=t.content.firstChild;if(!el.hasAttribute('data-notr'))el.textContent=tr(el.textContent);r.deleteContents();r.insertNode(el);break}});
+      var r=document.createRange();r.setStart(n,i);r.setEnd(n,i+p.org.length);var t=document.createElement('template');t.innerHTML=ro?brRo(p):brSpan(p);var el=t.content.firstChild;if(!el.hasAttribute('data-notr'))el.textContent=tr(el.textContent);r.deleteContents();r.insertNode(el);break}});
 }
 /* gegevensset in het rekenblad: 40 verzonnen deelnemers */
 var PSC=[['naam','Naam',1,'N','trim · NFC · kleine letters'],['geb','Geboortedatum',1,'D','ISO 8601'],['adres','Adres',1,'A','trim · NFC · kleine letters'],['pc','Postcode',1,'C','zonder spatie · hoofdletters'],['iban','IBAN',1,'X','zonder spaties · hoofdletters'],['inleg','Inleg (€)',0],['status','Status',0]];
@@ -1759,6 +1767,7 @@ function meldingen(){
   if(st)m.push(['amber',st+(st===1?' onderdeel toont een oudere versie van de bron':' onderdelen tonen een oudere versie van de bron'),'ond']);
   if(onb&&samen())m.push(['grey',onb+(onb===1?' onderdeel zonder vastgelegde herkomst':' onderdelen zonder vastgelegde herkomst'),'ond']);
   if(t!=='mail'&&D().loc&&SVN[D().loc].k!=='dos')m.push(['amber',SVN[D().loc].k==='pers'?'Losse kopie op de persoonlijke schijf':'Opgeslagen buiten een dossier','meta']);
+  if(!isDs()&&!brOk(t)&&brItems(t).some(function(p){return p.on}))m.push(['amber','Anonimisering is nog een voorvertoning','anon']);
   if(X().uit)m.push(['grey','Toegankelijkheid is niet gecontroleerd','toeg']);
   else if((n=openCount(t)))m.push(['amber',n+(n===1?' bevinding over toegankelijkheid':' bevindingen over toegankelijkheid'),'toeg']);
   if(wfMineNow(t))m.push(['teal','Jouw stap in de procedure staat open','flow']);
@@ -1769,6 +1778,8 @@ function paneHtml(){
   var lv=L(),t=S.type,cs=D().comp,keys=Object.keys(cs);
   if(S.viewer==='lezer'){var r=readerText();
     return '<div class="p-head"><div class="row1"><h2>'+(t==='mail'?'Zo ziet de ontvanger het bericht':'Zo ziet een inwoner het stuk')+'</h2></div></div><div class="empty"><b>'+esc(r[0])+'</b>'+esc(r[1])+'</div>'+
+      (brRead()&&brShown()&&!brOk()?'<div class="empty" style="padding-top:0"><b>Voorvertoning van de anonimisering</b>De plaatshouders in het stuk zijn een voorstel van het programma. De opsteller heeft ze nog niet bevestigd; tot dat moment is dit geen vastgestelde weergave voor een inwoner.</div>':'')+
+      (brRead()&&brShown()&&brOk()?'<div class="empty" style="padding-top:0"><b>Persoonsgegevens zijn afgeschermd</b>'+(brShown()===1?'1 persoonsgegeven is bij de bron vervangen door een plaatshouder.':brShown()+' persoonsgegevens zijn bij de bron vervangen door een plaatshouder.')+' Een inwoner ziet de waarde niet; wie daartoe bevoegd is wel. Lakken met een weigeringsgrond gebeurt daarna in Beoordelen.</div>':'')+
       '<div class="empty" style="padding-top:0">Een lezer heeft geen paneel. Bronvermeldingen, leemtes en verouderingssignalen staan in het stuk zelf, zodat iedereen ze ziet.</div>';
   }
   if(lv===1){
@@ -2298,7 +2309,7 @@ function render0(){
   if(S.view!=='doc'){$('win').innerHTML='<div class="appwin">'+phHtml()+'</div>';renderHood();return}
   var call=calloutText();
   var doc=t==='tekst'?tekstHtml():t==='rekenblad'?sheetHtml():t==='presentatie'?deckHtml():mailHtml();
-  $('win').innerHTML='<div class="democtl">'+optBar()+'</div><div class="appwin"><div class="wd-top">'+I[t==='mail'?'mail':'doc']+(t!=='mail'&&!reader?'<button class="qsave" data-act="saveas" title="Opslaan als" aria-label="Opslaan als">'+tl('save')+'</button>':'')+'<span class="fn">'+esc(fname())+'</span>'+(paneCls()?'':statusPill())+(reader?'<span class="pill p-violet">'+(t==='mail'?'Zoals ontvangen':'Openbare weergave')+'</span>':'')+
+  $('win').innerHTML='<div class="democtl">'+optBar()+'</div><div class="appwin"><div class="wd-top">'+I[t==='mail'?'mail':'doc']+(t!=='mail'&&!reader?'<button class="qsave" data-act="saveas" title="Opslaan als" aria-label="Opslaan als">'+tl('save')+'</button>':'')+'<span class="fn">'+esc(fname())+'</span>'+(paneCls()?'':statusPill())+(reader?'<span class="pill p-violet">'+(t==='mail'?'Zoals ontvangen':'Openbare weergave')+'</span>'+(brRead()&&brShown()&&!brOk()?'<span class="pill p-amber">Voorvertoning</span>':''):'')+
     '<span class="env">'+esc(envName())+(paneCls()?'':' · '+esc(envOpp()))+'</span></div>'+
     chromeHtml()+
     '<div class="wd-body'+(paneCls()&&!S.pane?' nopane':'')+'"><div class="wd-desk">'+
@@ -2486,8 +2497,9 @@ var ACT={
   brppl:function(d){BR().ppl=+d.v;render()},
   brexp:function(d){var b=BR();b.exp=b.exp===d.id?null:d.id;render();var el=$('ph-'+d.id);if(el&&b.exp)el.scrollIntoView({block:'center'})},
   brtog:function(d){var b=BR(),p=brItems().filter(function(x){return x.id===d.id})[0];if(!p)return;b.ppl=p.ppl<=b.ppl?p.ppl-1:Math.max(b.ppl,p.ppl);b.exp=p.id;render();var c=$('bc-'+p.id);if(c)c.scrollIntoView({block:'nearest'})},
-  broff:function(d){var b=BR(),i=-1;b.man.forEach(function(m,j){if(m.id===d.id)i=j});if(i>=0){b.man.splice(i,1);b.exp=null}else b.on[d.id]=!b.on[d.id];render()},
-  bradd:function(){var b=BR(),ty=$('br-ty').value,id='x'+(b.man.length+1)+'-'+b.pick.t.length;b.man.push({id:id,t:b.pick.t,ty:ty});b.pick=null;b.exp=id;render()},
+  brok:function(){var b=BR(),n=new Date();b.ok={by:me().split(', ')[0],at:TODAY+' '+('0'+n.getHours()).slice(-2)+':'+('0'+n.getMinutes()).slice(-2)};b.pick=null;toast('Bevestigd. Wie niet bevoegd is, ziet voortaan de plaatshouders en niet de waarden.');render()},
+  broff:function(d){var b=BR(),i=-1;b.ok=null;b.man.forEach(function(m,j){if(m.id===d.id)i=j});if(i>=0){b.man.splice(i,1);b.exp=null}else b.on[d.id]=!b.on[d.id];render()},
+  bradd:function(){var b=BR(),ty=$('br-ty').value,id='x'+(b.man.length+1)+'-'+b.pick.t.length;b.man.push({id:id,t:b.pick.t,ty:ty});b.ok=null;b.pick=null;b.exp=id;render()},
   brcancel:function(){BR().pick=null;render()},
   sheet:function(d){D('rekenblad').sheet=+d.i;S.sel=null;S.open=null;TOPV=true;render()},
   pscol:function(d){var p=PS();if(p.on)return;p.sel[d.k]=!p.sel[d.k];render()},
