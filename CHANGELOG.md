@@ -2,6 +2,12 @@
 
 Het versienummer staat in `VERSION`. Bij elke nieuwe versie: nummer ophogen, hier een regel toevoegen, `python3 build.py` draaien.
 
+## Versie 26 · 09-10-2026
+- De naam MIRA staat alleen nog in de titel van de pagina en in het colofon. Bij Wie zegt dat? en in de voorbeeldberichten staat weer Assistent, en het lemma in de begrippenlijst is vervallen.
+
+## Versie 25 · 09-10-2026
+- In het kantoorpakket heet het tabblad, de groep en het menu weer Assistent in plaats van MIRA. De naam MIRA blijft in de titel, bij Wie zegt dat?, in het colofon en in de begrippenlijst.
+
 ## Versie 24 · 09-10-2026
 - De demo opent in het Nederlands, ongeacht de taal van de browser. Een andere taal kies je met de taalkeuze, die wordt onthouden, of met `#de`, `#en` of `#fr` achter het adres, wat alleen voor die link geldt.
 
