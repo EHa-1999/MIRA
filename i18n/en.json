@@ -1922,5 +1922,15 @@
  "… Portefeuillehouder is wethouder M. de Graaf.": "… The portfolio holder is Alderman M. de Graaf.",
  "… geluidsoverlast van de omvormers, mede vanwege haar slaapstoornis.": "… noise nuisance from the inverters, partly because of her sleep disorder.",
  "… hij is bereikbaar op {0}-{1} {2} {3}.": "… he can be reached on {0}-{1} {2} {3}.",
- "€ {0} mln": "€{0} million"
+ "€ {0} mln": "€{0} million",
+ "Laatst gewijzigd door": "Last modified by",
+ "Auteur van een opmerking": "Author of a comment",
+ "kenmerk van het bestand": "file property",
+ "{0} in de tekst, {1} in de kenmerken van het bestand.": "{0} in the text, {1} in the file properties.",
+ "In de kenmerken van het bestand": "In the file properties",
+ "Deze namen staan niet op de pagina, maar wel in het bestand. Ze reizen mee wanneer het bestand wordt gedeeld. Bij publicatie worden de overige kenmerken, zoals sjabloon en bewerkingstijd, niet meegenomen.": "These names are not on the page, but they are in the file. They travel with the file when it is shared. On publication the other properties, such as template and editing time, are not carried over.",
+ "Documenteigenschappen": "Document properties",
+ "Kenmerken van het bestand": "File properties",
+ "Dit ziet een inwoner in de eigenschappen van het bestand.": "This is what a resident sees in the file's properties.",
+ "Staan niet op de pagina, wel in het bestand.": "Not on the page, but in the file."
 }

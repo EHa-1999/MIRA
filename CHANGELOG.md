@@ -2,6 +2,11 @@
 
 Het versienummer staat in `VERSION`. Bij elke nieuwe versie: nummer ophogen, hier een regel toevoegen, `python3 build.py` draaien.
 
+## Versie 29 · 10-10-2026
+- Anonimiseren bij de bron kijkt ook in de kenmerken van het bestand: auteur, laatst gewijzigd door en de auteur van een opmerking. Ze staan als eigen groep in de module, met dezelfde knoppen als de treffers in de tekst, en vallen onder dezelfde voorvertoning en bevestiging.
+- Boven het document staat in de module Anonimiseren een kaart Kenmerken van het bestand. In de lezersweergave heet die Documenteigenschappen en toont ze wat een inwoner ziet.
+- De teller onderscheidt treffers in de tekst en in de kenmerken van het bestand.
+
 ## Versie 28 · 09-10-2026
 - Anonimiseren bij de bron is een voorvertoning totdat de opsteller haar bevestigt. In de module staat bovenaan de status, met de knop Bevestig de anonimisering. Vóór de bevestiging hebben de plaatshouders een gestippelde rand, in de module en in de weergave voor een inwoner, en staat er Voorvertoning bij.
 - Onterechte treffers laat je staan met Laat staan; wat het programma heeft gemist, voeg je toe door tekst te selecteren. Elke wijziging na de bevestiging maakt er weer een voorvertoning van.

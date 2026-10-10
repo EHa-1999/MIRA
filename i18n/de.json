@@ -1943,5 +1943,15 @@
  "… Portefeuillehouder is wethouder M. de Graaf.": "… Zuständig ist Beigeordneter M. de Graaf.",
  "… geluidsoverlast van de omvormers, mede vanwege haar slaapstoornis.": "… Lärmbelästigung durch die Wechselrichter, auch wegen ihrer Schlafstörung.",
  "… hij is bereikbaar op {0}-{1} {2} {3}.": "… er ist erreichbar unter {0}-{1} {2} {3}.",
- "€ {0} mln": "{0} Mio. €"
+ "€ {0} mln": "{0} Mio. €",
+ "Laatst gewijzigd door": "Zuletzt geändert von",
+ "Auteur van een opmerking": "Autor eines Kommentars",
+ "kenmerk van het bestand": "Dateieigenschaft",
+ "{0} in de tekst, {1} in de kenmerken van het bestand.": "{0} im Text, {1} in den Dateieigenschaften.",
+ "In de kenmerken van het bestand": "In den Dateieigenschaften",
+ "Deze namen staan niet op de pagina, maar wel in het bestand. Ze reizen mee wanneer het bestand wordt gedeeld. Bij publicatie worden de overige kenmerken, zoals sjabloon en bewerkingstijd, niet meegenomen.": "Diese Namen stehen nicht auf der Seite, wohl aber in der Datei. Sie wandern mit, wenn die Datei geteilt wird. Bei der Veröffentlichung werden die übrigen Eigenschaften, etwa Vorlage und Bearbeitungszeit, nicht übernommen.",
+ "Documenteigenschappen": "Dokumenteigenschaften",
+ "Kenmerken van het bestand": "Dateieigenschaften",
+ "Dit ziet een inwoner in de eigenschappen van het bestand.": "Das sieht ein Einwohner in den Eigenschaften der Datei.",
+ "Staan niet op de pagina, wel in het bestand.": "Stehen nicht auf der Seite, wohl aber in der Datei."
 }

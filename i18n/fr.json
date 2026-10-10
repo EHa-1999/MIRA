@@ -1946,5 +1946,15 @@
  "… Portefeuillehouder is wethouder M. de Graaf.": "… L'échevin en charge du dossier est M. de Graaf.",
  "… geluidsoverlast van de omvormers, mede vanwege haar slaapstoornis.": "… nuisances sonores dues aux onduleurs, notamment en raison de ses troubles du sommeil.",
  "… hij is bereikbaar op {0}-{1} {2} {3}.": "… il est joignable au {0}-{1} {2} {3}.",
- "€ {0} mln": "{0} M€"
+ "€ {0} mln": "{0} M€",
+ "Laatst gewijzigd door": "Dernière modification par",
+ "Auteur van een opmerking": "Auteur d'un commentaire",
+ "kenmerk van het bestand": "propriété du fichier",
+ "{0} in de tekst, {1} in de kenmerken van het bestand.": "{0} dans le texte, {1} dans les propriétés du fichier.",
+ "In de kenmerken van het bestand": "Dans les propriétés du fichier",
+ "Deze namen staan niet op de pagina, maar wel in het bestand. Ze reizen mee wanneer het bestand wordt gedeeld. Bij publicatie worden de overige kenmerken, zoals sjabloon en bewerkingstijd, niet meegenomen.": "Ces noms ne figurent pas sur la page, mais bien dans le fichier. Ils l'accompagnent lorsqu'il est partagé. Lors de la publication, les autres propriétés, comme le modèle et la durée d'édition, ne sont pas reprises.",
+ "Documenteigenschappen": "Propriétés du document",
+ "Kenmerken van het bestand": "Propriétés du fichier",
+ "Dit ziet een inwoner in de eigenschappen van het bestand.": "Voici ce qu'un habitant voit dans les propriétés du fichier.",
+ "Staan niet op de pagina, wel in het bestand.": "Absentes de la page, mais présentes dans le fichier."
 }
