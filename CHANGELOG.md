@@ -2,6 +2,11 @@
 
 Het versienummer staat in `VERSION`. Bij elke nieuwe versie: nummer ophogen, hier een regel toevoegen, `python3 build.py` draaien.
 
+## Versie 30 · 13-10-2026
+- In lijn met de e-mailarchivering. Metadateren toont bij elk stuk Zakelijk of persoonlijk; bij e-mail met de eigen regels: tien dagen bedenktijd, persoonlijk versleuteld en buiten de Woo, terugzetten op verzoek, bedenktijd stil bij afwezigheid.
+- Adresboek als onderdeel van het paneel, alleen in de mailomgeving: zoeken, een vermelding bekijken en toevoegen aan Cc.
+- Techniek: tabel met wat elke mailomgeving levert, met Exchange en IMAP naast elkaar. Architectuur noemt het e-mailarchief in het platform.
+
 ## Versie 29 · 10-10-2026
 - Anonimiseren bij de bron kijkt ook in de kenmerken van het bestand: auteur, laatst gewijzigd door en de auteur van een opmerking. Ze staan als eigen groep in de module, met dezelfde knoppen als de treffers in de tekst, en vallen onder dezelfde voorvertoning en bevestiging.
 - Boven het document staat in de module Anonimiseren een kaart Kenmerken van het bestand. In de lezersweergave heet die Documenteigenschappen en toont ze wat een inwoner ziet.

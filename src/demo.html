@@ -309,6 +309,9 @@ h1,h2,h3,h4,p{margin:0}
 .m-ovz,.r-ovz{--mc:var(--fg);--ms:var(--surface2)}.m-ond,.r-ond{--mc:var(--accent);--ms:var(--accent-soft)}.m-meta,.r-meta{--mc:var(--blue);--ms:var(--blue-soft)}
 .m-toeg,.r-toeg{--mc:var(--violet);--ms:var(--violet-soft)}.m-anon,.r-anon{--mc:var(--fg);--ms:color-mix(in srgb,var(--fg) 9%,var(--surface))}
 .m-clas,.r-clas{--mc:var(--amber);--ms:var(--amber-soft)}.m-waar,.r-waar{--mc:var(--green);--ms:var(--green-soft)}
+.m-gab,.r-gab{--mc:var(--accent);--ms:var(--accent-soft)}
+.glist{display:flex;flex-direction:column;gap:4px;margin-top:8px}.grow{display:grid;gap:1px;text-align:left;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);font-size:12.5px}.grow:hover{border-color:var(--accent)}.grow span,.gcard span{color:var(--muted);font-size:11.5px}.gcard{display:grid;gap:1px;margin:8px 0}.gcard b{font-size:14px}
+.mrules{margin-top:6px;font-size:12.5px}.mrules summary{cursor:pointer;color:var(--accent);font-weight:500}.mrules ul{margin:6px 0 0;padding-left:18px;list-style:disc;display:flex;flex-direction:column;gap:4px}
 .m-flow,.r-flow{--mc:var(--rose);--ms:var(--rose-soft)}.m-help,.r-help{--mc:var(--muted);--ms:var(--surface2)}
 .qsave{display:inline-grid;border-radius:4px}.qsave:hover{background:var(--sel)}.qsave .tl{width:22px;height:22px}
 .rtabs button.file{color:var(--muted)}
@@ -517,6 +520,7 @@ h1,h2,h3,h4,p{margin:0}
 .tw{overflow-x:auto;max-width:980px}
 .tt{border-collapse:collapse;font-size:13px;width:100%;min-width:560px}
 .tt th,.tt td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.tt tr.dim td{color:var(--muted)}
 .tt th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600}
 @media (max-width:900px){.ph{overflow:visible;padding:16px}}
 
@@ -845,12 +849,12 @@ var CLS={raad:{lab:'Besluitvorming gemeenteraad',waard:'Blijvend te bewaren',jar
 
 var S,D0={tekst:1,rekenblad:1,presentatie:1,mail:1};
 function mk(naam,id,cls){return{naam:naam,naam0:naam,id:id,naamOk:false,cls:cls,cls0:cls,clsOk:false,tref:[],wzd:{}}}
-function mailDoc(){return{status:'concept',achteraf:false,keuze:{rv:null,rb:null},comp:{
+function mailDoc(){return{status:'concept',achteraf:false,cc:[],keuze:{rv:null,rb:null},comp:{
   rv:{naam:'Bijlage Raadsvoorstel',ico:'doc',kind:'att',doc:'tekst',in:true},
   rb:{naam:'Bijlage Opbrengstberekening',ico:'table',kind:'att',doc:'rekenblad',in:true},
   citaat:{naam:'Geciteerd bericht provincie',ico:'mail',kind:'inc',in:true}},
   meta:mk('Raadsvoorstel zonnepark De Hoge Weide','e81c0d36-71fa','raad')}}
-function fresh(){return{
+function fresh(){return{gab:{q:'',sel:null},
   view:S?S.view:'doc',rib:S?S.rib:'oa',ctl:S?S.ctl:ctl0(),pane:S?S.pane:true,obj:S?S.obj:'samen',type:S?S.type:'tekst',tv:S?S.tv:'nu',env:S?S.env:'ms',viewer:'opsteller',
   latest:{opbrengst:3,explo:1,kaart:2,spec:2},
   docs:{
@@ -1054,7 +1058,7 @@ function mailHtml(){
       if(k==='rv'&&confKnown('tekst')&&m.keuze.rv!=='openbaar')w.push('<span class="pill p-violet">'+I.lock+' Vertrouwelijk onderdeel</span>');
       if(k==='rb'&&m.keuze.rb!=='zonder')w.push('<span class="pill p-violet">'+I.eye+' Verborgen blad</span>')}
     return '<div class="att'+(S.sel===k&&as?' sel':'')+'" id="a-'+k+'"'+anchorAttrs(k,c[k].naam)+'><span class="ic'+(as?'':' off')+'">'+I[ico]+'</span><span><b style="font-weight:500">'+esc(fn)+'</b><small>'+esc(attNote(k))+'</small></span>'+(w.length?'<span class="pills">'+w.join('')+'</span>':'')+'</div>'}
-  return '<div class="mail'+(as?' assist':'')+'"><dl class="mhead"><dt>Van</dt><dd>Noor Bakker · '+hx('m2')+'</dd><dt>Aan</dt><dd>Omgevingsloket provincie · omgevingsloket@provincie.example</dd>'+
+  return '<div class="mail'+(as?' assist':'')+'"><dl class="mhead"><dt>Van</dt><dd>Noor Bakker · '+hx('m2')+'</dd><dt>Aan</dt><dd>Omgevingsloket provincie · omgevingsloket@provincie.example</dd>'+(m.cc.length?'<dt>Cc</dt><dd data-notr>'+m.cc.map(esc).join(', ')+'</dd>':'')+
     '<dt>Onderwerp</dt><dd class="subj">Raadsvoorstel zonnepark De Hoge Weide</dd>'+(sent?'<dt>Verzonden</dt><dd>'+TODAY+'</dd>':'')+'</dl>'+
     '<div class="atts">'+att('rv','Raadsvoorstel zonnepark De Hoge Weide.pdf','doc')+att('rb','Opbrengstberekening De Hoge Weide.xlsx','table')+'</div>'+
     '<div class="mbody"><p>Geachte heer, mevrouw,</p><p>Hierbij ontvangt u het raadsvoorstel voor zonnepark De Hoge Weide, met de opbrengstberekening waarop de kerncijfers zijn gebaseerd. De raad behandelt het voorstel op 29 oktober.</p><p>Met vriendelijke groet,<br>'+hx('m1')+'<br>Gemeente Haarlem</p>'+
@@ -1131,11 +1135,12 @@ function usedHtml(){
   return '<div class="used">'+u.map(function(x){return '<div class="oitem"><div class="ohead"><span class="ic">'+I[x.t==='mail'?'mail':x.t==='tekst'?'doc':'chart']+'</span><span class="nm">'+esc(x.naam)+'<small>'+esc(x.wat)+' · '+esc(x.status)+'</small></span>'+
     '<span class="pills"><span class="pill '+(x.stale?'p-amber':'p-green')+'">'+(x.stale?'Toont versie '+x.v+' · loopt achter':'Toont versie '+x.v)+'</span><button class="link" data-act="goto" data-t="'+x.t+'">Open</button></span></div></div>'}).join('')+'</div>';
 }
-var FLD={id:['Identificatie','afgeleid'],naam:['Naam','voorgesteld'],agg:['Aggregatieniveau','afgeleid'],av:['Archiefvormer','afgeleid'],bij:['Hoort bij','afgeleid'],cls:['Classificatie','voorgesteld'],waard:['Waardering en bewaartermijn','afgeleid'],bep:['Beperking gebruik','afgeleid'],tref:['Trefwoord','gevraagd']};
+var FLD={aard:['Zakelijk of persoonlijk','afgeleid'],id:['Identificatie','afgeleid'],naam:['Naam','voorgesteld'],agg:['Aggregatieniveau','afgeleid'],av:['Archiefvormer','afgeleid'],bij:['Hoort bij','afgeleid'],cls:['Classificatie','voorgesteld'],waard:['Waardering en bewaartermijn','afgeleid'],bep:['Beperking gebruik','afgeleid'],tref:['Trefwoord','gevraagd']};
 function baseBep(){return (S.type==='tekst'||S.type==='presentatie')?'Openbaar':'Intern'}
 function claimsFor(f){
   var m=D().meta,who=me(),list=[],mail=S.type==='mail';
   function C(w,wie,wan,waarom,waarop,hoe,gezag){return{w:w,wie:wie,wan:wan,waarom:waarom,waarop:waarop,hoe:hoe,gezag:gezag}}
+  if(f==='aard')list=[C('Zakelijk','XENA-platform','02-10-2026',mail?'Een bericht dat bij een dossier en een zaak hoort, is zakelijk.':'Een stuk in een dossier is zakelijk.','Dossier Zonnepark De Hoge Weide · zaak Z-2026-01837','Afgeleid door een vastgestelde regel','Afgeleid')];
   if(f==='id')list=[C(m.id,'XENA-platform','02-10-2026','Elk object krijgt bij het eerste opslaan een identificatie.','Dit stuk is op die datum voor het eerst opgeslagen.','Toegekend door het platform','Afgeleid')];
   if(f==='naam'){list=[C(m.naam0,'Assistent','02-10-2026',mail?'De naam volgt het onderwerp van het bericht.':'De naam volgt de titel van het stuk.',mail?'De onderwerpregel.':'De titel van het stuk.','Voorgesteld door een programma','Voorstel')];
     if(m.naamOk)list.unshift(C(m.naam,who,TODAY,'De opsteller bepaalt de naam van het stuk.','Bevestigd in het paneel.','Handmatig vastgesteld','Besloten'))}
@@ -1167,6 +1172,8 @@ function fld(f,control,hint,kind){
 function metaHtml(){
   var m=D().meta,r=restrictions(S.type),dirty=!m.naamOk||!m.clsOk,mail=S.type==='mail';
   return '<div class="form">'+
+  fld('aard','<div class="inp derived" id="f-aard">Zakelijk</div>',[mail?'Het bericht hoort bij een dossier en een zaak, en is daarmee zakelijk. Persoonlijk kan dan niet.':'Het stuk staat in een dossier en is daarmee zakelijk.'])+
+  (mail?'<details class="mrules"><summary>Eigen regels voor e-mail</summary><ul><li>Na ontvangst heb je tien dagen bedenktijd. Doe je niets, dan wordt een bericht zakelijk.</li><li>Persoonlijk betekent: in de map Persoonlijk, versleuteld met je eigen sleutel en buiten het zoekbereik voor de Woo.</li><li>Binnen de bedenktijd kun je zakelijk nog terugzetten. Daarna alleen op verzoek, bij de informatiebeheerder.</li><li>Gekoppeld aan een zaak of dossier, of onder een lopend Woo-verzoek: niet persoonlijk.</li><li>Met een afwezigheidsbericht aan staat de bedenktijd stil.</li><li>Filters mogen een bericht niet naar Persoonlijk verplaatsen.</li></ul></details>':'')+
   fld('id','<div class="inp derived" id="f-id" data-notr style="font-family:var(--mono);font-size:12px">'+m.id+'</div>')+
   fld('naam','<input class="inp" id="f-naam" data-in="naam"'+(m.naam===m.naam0?' data-trv':'')+' value="'+esc(m.naam)+'">',m.naamOk?null:[mail?'Voorgesteld uit het onderwerp. Je kunt het aanpassen.':'Voorgesteld uit de titel. Je kunt het aanpassen.'],m.naamOk?'bevestigd':null)+
   fld('agg','<div class="inp derived" id="f-agg">Archiefstuk</div>')+
@@ -1726,14 +1733,36 @@ function ondSum(){
   return o.length?o.join(' · '):'Geen bijzonderheden.';
 }
 var PTABS=[['ovz','Overzicht'],['ond','Onderdelen']].concat(TABS,[['help','Help']]);
-var PSUB={ovz:'Status, locatie en meldingen',ond:'Wat van elders komt',meta:'Kenmerken, en wie dat zegt',toeg:'Structuur en alternatieve tekst',anon:'Persoonsgegevens vinden en afschermen',clas:'Openbaarheid en bewaring',waar:'Authenticiteit en integriteit van een versie',flow:'Stappen van de procedure',help:'Wat je waar vindt'};
+function ptabs(){return S.type==='mail'?PTABS.slice(0,-1).concat([['gab','Adresboek']],PTABS.slice(-1)):PTABS}
+var GABL=[['Sanne de Vries','s.devries@haarlem.example','Gemeente Haarlem','Team Vergunningen','Vergunningverlener'],
+ ['Fatima El Amrani','f.elamrani@haarlem.example','Gemeente Haarlem','Projectbureau','Projectleider'],
+ ['Sem de Wit','s.dewit@haarlem.example','Gemeente Haarlem','Team Duurzaamheid','Beleidsmedewerker energie'],
+ ['Jeroen Kramer','j.kramer@zandvoort.example','Gemeente Zandvoort','Evenementen','Adviseur evenementen'],
+ ['Lotte Visser','l.visser@bloemendaal.example','Gemeente Bloemendaal','Vergunningen','Beleidsmedewerker leges'],
+ ['Ahmed Yilmaz','a.yilmaz@velsen.example','Gemeente Velsen','Informatiebeheer','Informatiebeheerder'],
+ ['Ingrid Smit','i.smit@heemstede.example','Gemeente Heemstede','Openbare ruimte','Projectleider']];
+function gabHtml(){
+  var g=S.gab,q=g.q.trim().toLowerCase(),m=D(),sent=m.status==='verzonden';
+  var c=g.sel&&GABL.filter(function(r){return r[1]===g.sel})[0];
+  if(c){var inCc=m.cc.indexOf(c[1])>=0;
+    return '<div class="sec"><button class="link" data-act="gback">← Terug naar de lijst</button><div class="gcard"><b data-notr>'+esc(c[0])+'</b><span><span>'+esc(c[4])+'</span> · <span data-notr>'+esc(c[2].replace('Gemeente ',''))+'</span></span></div>'+
+      '<dl class="kv"><dt>E-mailadres</dt><dd data-notr>'+esc(c[1])+'</dd><dt>Gemeente</dt><dd>'+esc(c[2])+'</dd><dt>Afdeling</dt><dd>'+esc(c[3])+'</dd></dl>'+
+      '<div class="rowb" style="justify-content:flex-start"><button class="btn sm primary" data-act="gcc" data-m="'+esc(c[1])+'"'+(sent||inCc?' disabled':'')+'>'+(inCc?'Staat in Cc':'Toevoegen aan Cc')+'</button></div>'+
+      '<p class="note" style="margin:8px 0 0">Je ziet alleen wat deze collega zelf deelt. Elke gemeente beheert haar eigen deel van het adresboek.</p></div>'}
+  var L=GABL.filter(function(r){return !q||r.join(' ').toLowerCase().indexOf(q)>=0});
+  return '<div class="sec"><input class="inp" id="gq" data-in="gq" type="search" value="'+esc(g.q)+'" placeholder="Zoek op naam, gemeente of afdeling" aria-label="Zoek op naam, gemeente of afdeling">'+
+    '<div class="glist">'+(L.length?L.map(function(r){return '<button class="grow" data-act="gsel" data-m="'+esc(r[1])+'"><b data-notr>'+esc(r[0])+'</b><span><span>'+esc(r[4])+'</span> · <span data-notr>'+esc(r[2].replace('Gemeente ',''))+'</span></span></button>'}).join(''):'<p class="note" style="margin:0">Niemand gevonden. Opname in het adresboek is vrijwillig.</p>')+'</div></div>'+
+    '<div class="sec"><h3><span>Mijn vermelding</span></h3><p class="note" style="margin:0">Je staat in het adresboek, met naam, e-mailadres, gemeente en afdeling. Opname is vrijwillig; je past haar aan of trekt haar in vanuit de mailomgeving.</p></div>'+
+    '<div class="sec" style="border-bottom:0"><p class="note" style="margin:0">Alleen zichtbaar voor medewerkers van gemeenten die de Office Assistent gebruiken. Het adresboek staat alleen in de mailomgeving; in tekst, rekenblad en presentatie heeft het paneel er geen.</p></div>';
+}
+var PSUB={gab:'Collega\'s van de aangesloten gemeenten',ovz:'Status, locatie en meldingen',ond:'Wat van elders komt',meta:'Kenmerken, en wie dat zegt',toeg:'Structuur en alternatieve tekst',anon:'Persoonsgegevens vinden en afschermen',clas:'Openbaarheid en bewaring',waar:'Authenticiteit en integriteit van een versie',flow:'Stappen van de procedure',help:'Wat je waar vindt'};
 function ovzHtml(){
   var t=S.type,ml=meldingen();
   return '<div class="sec"><h3><span>Dit stuk</span></h3><div class="ovn" data-notr>'+esc(fname())+'</div>'+locLine()+'<div class="p-act"><span class="pls">'+statusPill()+'</span>'+(t==='tekst'||t==='presentatie'?vastBtn():'')+'</div></div>'+
     '<div class="sec"><h3><span>Meldingen</span><span data-notr>'+ml.length+'</span></h3>'+(ml.length?'<div class="ml">'+ml.map(function(m){return '<button class="mrow" data-act="tab" data-t="'+m[2]+'"><i class="dot d-'+m[0]+'"></i><span>'+esc(m[1])+'</span><span class="to">'+tnm(PTABS.filter(function(x){return x[0]===m[2]})[0])+'</span></button>'}).join('')+'</div>':'<p class="note" style="margin:0">Geen meldingen.</p>')+'</div>'+
     '<div class="sec" style="border-bottom:0"><h3><span>Verbinding</span></h3><div class="p-act" style="justify-content:flex-start"><span class="pill p-green">Verbonden met XENA</span></div><p class="note" style="margin:6px 0 0">'+esc(envName())+' · '+esc(envOpp())+' · bereikt '+(t==='mail'?'trap 2 tot 3':FAM[S.env].bereik)+'</p></div>';
 }
-var PDESC={ond:'Wat in dit stuk ergens anders vandaan komt, met bron en versie.',meta:'Wat over dit stuk is vastgelegd, en wie dat zegt.',toeg:LATER.toeg,anon:LATER.anon,clas:LATER.clas,waar:LATER.waar,flow:LATER.flow,help:'Wat het paneel doet en waar je wat vindt.'};
+var PDESC={gab:'Collega\'s van de aangesloten gemeenten opzoeken en aan het bericht toevoegen. Alleen in de mailomgeving.',ond:'Wat in dit stuk ergens anders vandaan komt, met bron en versie.',meta:'Wat over dit stuk is vastgelegd, en wie dat zegt.',toeg:LATER.toeg,anon:LATER.anon,clas:LATER.clas,waar:LATER.waar,flow:LATER.flow,help:'Wat het paneel doet en waar je wat vindt.'};
 function paneCls(){return S.viewer!=='lezer'&&L()>1?' rl m-'+S.tab:''}
 function ondHtml(){
   var t=S.type,cs=D().comp,keys=Object.keys(cs);
@@ -1771,7 +1800,7 @@ function objInfo(){
 }
 function phelpHtml(){
   return '<div class="sec"><p class="note" style="margin:0">Het paneel hoort bij het stuk dat open staat. Overzicht toont de status van het stuk en wat aandacht vraagt. Rechts kies je een module; de knoppen in de balk van het kantoorpakket doen hetzelfde.</p></div>'+
-    '<div class="sec"><h3><span>Modules</span></h3><div class="hl">'+PTABS.filter(function(x){return x[0]!=='help'}).map(function(x){return '<button class="hrow r-'+x[0]+'" data-act="tab" data-t="'+x[0]+'"><span class="vic">'+tl(OAI[x[0]])+'</span><span><b>'+x[1]+'</b><span>'+PDESC[x[0]]+'</span></span></button>'}).join('')+'</div></div>'+
+    '<div class="sec"><h3><span>Modules</span></h3><div class="hl">'+ptabs().filter(function(x){return x[0]!=='help'}).map(function(x){return '<button class="hrow r-'+x[0]+'" data-act="tab" data-t="'+x[0]+'"><span class="vic">'+tl(OAI[x[0]])+'</span><span><b>'+x[1]+'</b><span>'+PDESC[x[0]]+'</span></span></button>'}).join('')+'</div></div>'+
     '<div class="sec"><h3><span>Meer weten</span></h3><p class="note" style="margin:0 0 8px">Bij elke waarde zegt Wie zegt dat? wie haar heeft bepaald, wanneer en op welke grond.</p><button class="btn sm" data-act="nav" data-v="help">Open de uitgebreide help</button></div>';
 }
 function meldingen(){
@@ -1806,11 +1835,12 @@ function paneHtml(){
       '<div class="sec" style="border-bottom:0"><h3>Onderdelen</h3>'+keys.filter(function(k){return cs[k].in}).map(function(k){var bl=bindLabel(cs[k]);return '<div class="oitem"><div class="ohead"><span class="ic off">'+I[cs[k].ico]+'</span><span class="nm">'+esc(cs[k].naam)+'</span><span class="pill '+bl[1]+'">'+esc(bl[0])+'</span></div></div>'}).join('')+'</div>'+
       '<div class="empty" style="padding-top:0">'+(t==='rekenblad'?'Sla een nieuwe versie op: geen enkel stuk dat deze cijfers gebruikt, merkt er iets van.':t==='mail'?'Verzend het bericht: het vertrekt, en er wordt niets vastgelegd.':'Wijzigt een collega het rekenblad, dan verandert hier niets en krijgt niemand een melding. Probeer het met de knop boven het document.')+'</div>';
   }
-  var k=S.tab,nm=tnm(PTABS.filter(function(x){return x[0]===k})[0]);
-  var body=k==='ovz'?ovzHtml():k==='ond'?ondHtml():k==='help'?phelpHtml():k==='meta'?metaHtml():k==='clas'?clasHtml():k==='toeg'?accHtml():k==='anon'?anHtml():k==='waar'?wmHtml():wfHtml();
+  if(S.tab==='gab'&&t!=='mail')S.tab='ovz';
+  var k=S.tab,nm=tnm(ptabs().filter(function(x){return x[0]===k})[0]);
+  var body=k==='gab'?gabHtml():k==='ovz'?ovzHtml():k==='ond'?ondHtml():k==='help'?phelpHtml():k==='meta'?metaHtml():k==='clas'?clasHtml():k==='toeg'?accHtml():k==='anon'?anHtml():k==='waar'?wmHtml():wfHtml();
   return '<div class="p-main"><div class="p-view" role="tabpanel" aria-label="'+nm+'">'+
       '<div class="p-vh"><span class="vic">'+tl(OAI[k])+'</span><div><h3>'+nm+'</h3><p>'+(k==='anon'&&isDs()?'Pseudoniemen per veld of per persoon':PSUB[k])+'</p></div><span class="conn" title="Verbonden met XENA" aria-label="Verbonden met XENA"></span></div>'+body+'</div>'+
-    '<nav class="p-rail" role="tablist" aria-orientation="vertical" aria-label="Modules">'+PTABS.map(function(x){var n=oaCnt(x[0]);
+    '<nav class="p-rail" role="tablist" aria-orientation="vertical" aria-label="Modules">'+ptabs().map(function(x){var n=oaCnt(x[0]);
       return '<button role="tab" class="r-'+x[0]+(x[0]==='help'?' last':'')+'" aria-selected="'+(k===x[0])+'" data-act="tab" data-t="'+x[0]+'" title="'+tnm(x)+'" aria-label="'+tnm(x)+'">'+tl(OAI[x[0]])+(n?'<small class="cnt">'+n+'</small>':'')+(x[0]==='waar'&&wmOk(t)?'<small class="cnt okc">✓</small>':'')+'</button>'}).join('')+'</nav></div>';
 }
 
@@ -1877,7 +1907,7 @@ function archHtml(){
   function conn(i,lab){return '<div class="conn"><button data-act="wire" data-i="'+i+'">'+lab+'</button></div>'}
   var left='<div><h2>Van gebaar tot gebeurtenis</h2><p>De assistent is een dunne laag op een bestaand platform. Wat de medewerker doet, loopt door vier omgevingen; het werk en de vastlegging gebeuren op het platform, nooit in de werkomgeving.</p>'+
     layer('l1','Gebruikersomgeving, de werkplek van de medewerker','Dit is de enige omgeving die de gemeente niet volledig beheerst. Daarom staan hier geen sleutels, geen tokens en geen gegevens.',
-      bx('Kantoorpakket','Word, LibreOffice, Collabora en andere: tekst, rekenblad en presentatie')+bx('Mailomgeving','Uitgaande berichten ontstaan hier; inkomende komen hier binnen')+bx('Adapter','Eén dunne adapter per werkomgeving. Levert de inhoud, neemt haar terug en zegt wat de omgeving kan')+bx('Paneel','Wat de medewerker ziet en waarmee zij antwoordt'))+
+      bx('Kantoorpakket','Word, LibreOffice, Collabora en andere: tekst, rekenblad en presentatie')+bx('Mailomgeving','Uitgaande berichten ontstaan hier; inkomende komen hier binnen. De postbus staat in het e-mailarchief van XENA, via IMAP')+bx('Adapter','Eén dunne adapter per werkomgeving. Levert de inhoud, neemt haar terug en zegt wat de omgeving kan')+bx('Paneel','Wat de medewerker ziet en waarmee zij antwoordt'))+
     conn(0,'Het contract, in twee richtingen · bekijk een voorbeeld')+
     layer('l2','Assistentkern, in elke werkomgeving gelijk','De kern kent het contract en kent geen werkomgevingen. Zij onthoudt niets tussen twee aanroepen.',
       bx('Zes modules','Metadateren, Toegankelijkheid, Anonimiseren, Classificeren, Waarmerken en Workflow')+bx('Coördinatie','Bepaalt welke bewerking wordt aangeroepen en wat er met de uitkomst gebeurt')+bx('Beoordelingsweergave','Het enige eigen venster, voor beslissingen die niet per werkomgeving mogen verschillen'))+
@@ -1886,7 +1916,7 @@ function archHtml(){
       bx('Aanmelding','Stelt vast wie de medewerker is')+bx('Geheimen','Sleutels en tokens blijven hier, buiten de werkplek')+bx('Doorgeven','Geeft elke aanroep door aan de juiste ingang van het platform'))+
     conn(2,'Twee ingangen, elke vastlegging een gebeurtenis · bekijk een voorbeeld')+
     layer('l4 key','XENA-platform, waar het werk gebeurt','Valt het platform weg, dan stopt de assistent met aanbieden wat zij niet kan waarmaken, en zegt zij dat. Het werk van de medewerker blokkeert zij niet.',
-      bx('Objecten en versies','Identificatie, versies, bindingen en metagegevens')+bx('Snelle, lezende vragen','Toegankelijkheid beoordelen, persoonsgegevens signaleren, beleid evalueren')+bx('Zwaar werk op de achtergrond','Lakken, waarmerken, formaat omzetten, samenstellen')+bx('Beleid','Openbaarheid, vertrouwelijkheid en bewaring, per onderdeel te toetsen')+bx('Sleutelbeheer','Sleutels voor versleuteling en waarmerk')+bx('Bestandstoegang','Hetzelfde object als bestand, voor de kantoorpakketten'))+'</div>';
+      bx('Objecten en versies','Identificatie, versies, bindingen en metagegevens')+bx('Snelle, lezende vragen','Toegankelijkheid beoordelen, persoonsgegevens signaleren, beleid evalueren')+bx('Zwaar werk op de achtergrond','Lakken, waarmerken, formaat omzetten, samenstellen')+bx('Beleid','Openbaarheid, vertrouwelijkheid en bewaring, per onderdeel te toetsen')+bx('Sleutelbeheer','Sleutels voor versleuteling en waarmerk')+bx('Bestandstoegang','Hetzelfde object als bestand, voor de kantoorpakketten')+bx('E-mailarchief','Elk bericht als object. De postbus via IMAP, het adresboek via CardDAV'))+'</div>';
   var right='<div><h2>Wat er gebeurt bij een handeling</h2><p>Kies een handeling uit de demo. De stappen tonen telkens dezelfde vier deelnemers.</p>'+
     '<div class="chips" role="group" aria-label="Handeling">'+SEQ.map(function(x,i){return '<button data-act="archh" data-i="'+i+'" aria-pressed="'+(a.h===i)+'">'+x.t+'</button>'}).join('')+'</div>'+
     (q.seg?'<div class="ctl" style="margin:10px 0 0"><span>De werkomgeving kan een deel van het document vervangen</span><div class="seg" role="group"><button data-act="archseg" data-v="1" aria-pressed="'+a.seg+'">Ja</button><button data-act="archseg" data-v="0" aria-pressed="'+!a.seg+'">Nee</button></div></div>':'')+
@@ -1930,6 +1960,8 @@ var TF=[
  ['markt','Controle vóór het verzenden','Het verzendgebaar onderscheppen','Waar dat niet kan, legt de assistent achteraf vast wat er is verstuurd.',2],
  ['markt','Herkomst zichtbaar in het kantoorpakket zelf','Een weergavemodus voor gebonden onderdelen','Nu toont alleen het paneel aan welke versie iets vastzit.',4],
  ['markt','Markering die een formaatwissel overleeft','Semantische markering in beide formaatfamilies','Nu herstelt de adapter de markeringen bij het openen.',4],
+ ['basis','Zakelijk of persoonlijk, met eigen regels voor e-mail','Aard vastleggen in het register','Bij e-mail: tien dagen bedenktijd, daarna alleen op verzoek terug.',2],
+ ['basis','Gemeentelijk adresboek in de mailomgeving','Adresboek opzoeken via CardDAV','Alleen binnen gemeenten met de Office Assistent. Opname is vrijwillig.',2],
  ['platform','Toegankelijkheid beoordelen','Nieuw · snel, alleen lezen','De enige bewerking die met de assistent meekomt.',1],
  ['platform','Structuur herstellen','Nieuw · op de achtergrond','Herstelt alleen wat eenduidig is.',1],
  ['platform','Samengestelde weergave per lezer','Compositie samenstellen · nieuw','Per onderdeel wordt getoetst wat deze lezer mag zien.',4],
@@ -1944,6 +1976,12 @@ var CAPS=[
  ['Een gebaar onderscheppen','zelden','nee','deels','verzenden: wisselt'],
  ['Hoogste trap van de ladder','2 tot 3','3 tot 4','4 tot 5','2 tot 3']
 ];
+var MENV=[
+ ['Thunderbird','IMAP, uit het e-mailarchief','extensie','ja','IMAP-trefwoorden','paneel en CardDAV'],
+ ['Outlook (klassiek) op Windows','IMAP, uit het e-mailarchief','COM-invoegtoepassing','ja','lokale categorieën','paneel'],
+ ['Nieuwe Outlook en Outlook op het web','IMAP, uit het e-mailarchief','geen','nee','geen','webmail van het e-mailarchief'],
+ ['Outlook met een Exchange-postbus','Exchange','webinvoegtoepassing','ja','categorieën','paneel'],
+ ['Webmail van het e-mailarchief','e-mailarchief','ingebouwd','ja','ingebouwd','ingebouwd']];
 var FMT=[
  ['ODF: tekst, rekenblad, presentatie','gemarkeerd gebied met eigen kenmerk','in het pakket, naast de inhoud'],
  ['OOXML tekstdocument','vergrendeld besturingselement met sleutel','eigen onderdeel in het pakket'],
@@ -1959,8 +1997,10 @@ function techHtml(){
     TG.filter(function(g){return f==='all'||f===g[0]}).map(function(g){return '<section class="tgrp"><header><span class="pill '+g[3]+'">'+n(g[0])+'</span><b>'+g[1]+'</b><span>'+g[2]+'</span></header>'+
       '<div class="trow hd"><div>Functie in de demo</div><div>Waar het op steunt</div><div>Let op</div></div>'+
       TF.filter(function(r){return r[0]===g[0]}).map(function(r){return '<div class="trow"><div class="fn">'+r[1]+' <span class="pill p-grey">stap '+r[4]+'</span></div><div>'+r[2]+'</div><div class="nt">'+r[3]+'</div></div>'}).join('')+'</section>'}).join('')+
-    '<section class="tgrp"><header><b>Wat elke werkomgeving levert</b><span>Een momentopname, deels aanname. Juist hier breiden leveranciers hun koppelvlakken geregeld uit.</span></header><div class="tw"><table class="tt"><thead><tr><th>Vermogen</th><th>Word, Excel, PowerPoint</th><th>Collabora Online</th><th>LibreOffice</th><th>Mailomgeving</th></tr></thead><tbody>'+
+    '<section class="tgrp"><header><b>Wat elke werkomgeving levert</b><span>Een momentopname, deels aanname. Juist hier breiden leveranciers hun koppelvlakken geregeld uit.</span></header><div class="tw"><table class="tt"><thead><tr><th>Vermogen</th><th>Word, Excel, PowerPoint</th><th>Collabora Online</th><th>LibreOffice</th><th>Mailomgeving (zie hieronder)</th></tr></thead><tbody>'+
       CAPS.map(function(r){return '<tr>'+r.map(function(c,i){return i?'<td>'+c+'</td>':'<td><b>'+c+'</b></td>'}).join('')+'</tr>'}).join('')+'</tbody></table></div></section>'+
+    '<section class="tgrp"><header><b>Wat elke mailomgeving levert</b><span>Momentopname, deels aanname. Dezelfde tabel staat in de demo over e-mailarchivering.</span></header><div class="tw"><table class="tt"><thead><tr><th>Mailomgeving</th><th>Postbus</th><th>Paneel</th><th>Controle bij verzenden</th><th>Labels</th><th>Adresboek</th></tr></thead><tbody>'+
+      MENV.map(function(r,i){return '<tr'+(i===3?' class="dim"':'')+'>'+r.map(function(c,j){return j?'<td>'+c+'</td>':'<td><b>'+c+'</b></td>'}).join('')+'</tr>'}).join('')+'</tbody></table></div><p class="hint" style="padding:0 12px 10px">Met een Exchange-postbus werkt de webinvoegtoepassing in elke Outlook, maar dan staat de mail bij Microsoft. Met de postbus in het e-mailarchief van XENA blijft voor Outlook alleen de COM-invoegtoepassing in Outlook (klassiek) over.</p></section>'+
     '<section class="tgrp"><header><b>Waar het in het bestand staat</b><span>Een gemaskeerde passage en de beschrijving van het stuk bestaan één keer, in het platform. Elk formaat draagt daarvan een afdruk.</span></header><div class="tw"><table class="tt"><thead><tr><th>Formaat</th><th>Plek van een passage</th><th>Beschrijving van het stuk</th></tr></thead><tbody>'+
       FMT.map(function(r){return '<tr><td><b>'+r[0]+'</b></td><td>'+r[1]+'</td><td>'+r[2]+'</td></tr>'}).join('')+'</tbody></table></div><p class="hint" style="padding:0 12px 10px">In de werkversie staat ook de versleutelde waarde van een gemaskeerde passage. In de gepubliceerde versie staan alleen de aanduiding, een grove soort, de weigeringsgrond en de datum.</p></section></div>';
 }
@@ -2003,7 +2043,7 @@ var HVIEWS=[
  ['tekst','Tekst','Een raadsvoorstel in de tekstverwerker, met het paneel van de assistent ernaast. Dit is het meest uitgewerkte stuk; begin hier.'],
  ['rekenblad','Rekenblad','De bron van de cijfers. Sla een nieuwe versie op en zie onder Gebruikt in welke stukken achterlopen.'],
  ['presentatie','Presentatie','Drie dia\'s met sprekersnotities. Het paneel volgt de dia die in beeld is.'],
- ['mail','E-mail','Een bericht met twee bijlagen. Bij het verzenden stelt de assistent één vraag per bijlage.'],
+ ['mail','E-mail','Een bericht met twee bijlagen. Bij het verzenden stelt de assistent één vraag per bijlage. Alleen hier heeft het paneel een adresboek.'],
  ['arch','Architectuur','De vier omgevingen, het contract ertussen en per handeling de stappen.'],
  ['tech','Techniek','Per functie wat zij vraagt en van wie: de werkomgeving, de leverancier of het platform.'],
  ['groei','Groeipad','In vier stappen invoeren, waarvan drie zonder op de markt te wachten.']
@@ -2127,8 +2167,8 @@ var TI={
   flag:'M4 13.5v-11M4 3h8l-2 2.5 2 2.5H4',props:'M3 4.5h10M3 8h10M3 11.5h10M6 3v3M10 6.5v3M5 10v3',nav:'M8 2.5l1.6 3.9 3.9 1.6-3.9 1.6L8 13.5 6.4 9.6 2.500 8l3.900-1.600z',gallery:'M2.500 2.500h4.500v4.500H2.500zM9 2.500h4.500v4.500H9zM2.500 9h4.500v4.500H2.500zM9 9h4.500v4.500H9z'
 };
 TI.tag='M2.5 2.5h5l6 6-5 5-6-6zM5.4 5.4h.1';TI.acc='M8 4.2a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM3 6h10M8 6v3.5M8 9.5l-2.5 4M8 9.5l2.5 4';TI.redact='M2.5 4h11M2.5 8h4M9 6.5h4.5v3H9zM2.5 12h8';TI.seal='M8 9.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM6 9l-1 4.5 3-1.5 3 1.5-1-4.500';TI.flow='M2.5 2.500h4v3h-4zM9.500 10.500h4v3h-4zM4.500 5.500v6.500h5';
-TI.home='M2.5 7.5L8 3l5.5 4.5V13h-4V9.5h-3V13h-4z';TI.layers='M8 2.5l5.5 3-5.5 3-5.5-3zM2.5 8.5l5.5 3 5.5-3M2.5 11l5.5 3 5.5-3';TI.help='M8 13.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM6.4 6.6a1.6 1.6 0 1 1 2.4 1.4c-.5.3-.8.7-.8 1.2M8 11.2h.1';
-var OAI={ovz:'home',ond:'layers',help:'help',meta:'tag',toeg:'acc',anon:'redact',clas:'flag',waar:'seal',flow:'flow'};
+TI.book='M3.5 2.5h8a1 1 0 0 1 1 1v10h-8a1 1 0 0 1-1-1zM8 7.2a1.4 1.4 0 1 0 0-2.8 1.4 1.4 0 0 0 0 2.8zM5.8 10.8c.4-1.3 1.2-2 2.2-2s1.8.7 2.2 2';TI.home='M2.5 7.5L8 3l5.5 4.5V13h-4V9.5h-3V13h-4z';TI.layers='M8 2.5l5.5 3-5.5 3-5.5-3zM2.5 8.5l5.5 3 5.5-3M2.5 11l5.5 3 5.5-3';TI.help='M8 13.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM6.4 6.6a1.6 1.6 0 1 1 2.4 1.4c-.5.3-.8.7-.8 1.2M8 11.2h.1';
+var OAI={gab:'book',ovz:'home',ond:'layers',help:'help',meta:'tag',toeg:'acc',anon:'redact',clas:'flag',waar:'seal',flow:'flow'};
 var TX={b:'B',i:'I',u:'U',col:'A',eur:'€',pct:'%',sum:'Σ',abc:'abc',dec:',0'};
 function tl(k,cls){return '<span class="tl'+(cls?' '+cls:'')+'" data-notr>'+(TI[k]?'<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="'+TI[k]+'"/></svg>':'<span class="tx t-'+k+'">'+TX[k]+'</span>')+'</span>'}
 function tls(a){return a.map(function(k){return k==='|'?'<span class="tsep"></span>':tl(k)}).join('')}
@@ -2152,7 +2192,7 @@ function actsHtml(){
 /* de knoppen van de assistent in de balk van het kantoorpakket: lint, werkbalk of pictogrammen */
 function oaCnt(k){var t=S.type;if(k==='ovz')return meldingen().length||'';return k==='toeg'?(X().uit?'?':(openCount(t)||'')):k==='flow'&&wfMineNow(t)?1:''}
 function oaBtns(kind){
-  var o=[['ovz','Overzicht'],['ond','Onderdelen']].concat(TABS).map(function(x){var n=oaCnt(x[0]);
+  var o=[['ovz','Overzicht'],['ond','Onderdelen']].concat(TABS,S.type==='mail'?[['gab','Adresboek']]:[]).map(function(x){var n=oaCnt(x[0]);
     return '<button class="ob '+kind+'" data-act="tab" data-t="'+x[0]+'" aria-pressed="'+(S.pane&&S.tab===x[0])+'"'+(kind==='ic'?' title="'+tnm(x)+'" aria-label="'+tnm(x)+'"':'')+'>'+tl(OAI[x[0]],kind==='big'?'xl':'')+(kind==='ic'?'':'<span>'+tnm(x)+'</span>')+(n?'<small class="cnt">'+n+'</small>':'')+'</button>'}).join('');
   return o;
 }
@@ -2435,6 +2475,9 @@ function doSend(mode){
 
 /* ---------- handelingen ---------- */
 var ACT={
+  gsel:function(d){S.gab.sel=d.m;hood('CardDAV GET /gab/… → 200 · alleen de gedeelde velden');render()},
+  gback:function(){S.gab.sel=null;render()},
+  gcc:function(d){var m=D();if(m.cc.indexOf(d.m)<0)m.cc.push(d.m);hood('Adresboek → Cc: '+d.m);render();toast('Toegevoegd aan Cc.')},
   set:function(d){
     var n=d.n,v=d.v;if(S[n]===v)return;S[n]=v;
     if(n==='obj'){S.sel=null;S.open=null;closeDlg()}
@@ -2580,6 +2623,7 @@ document.addEventListener('keydown',function(e){
 document.addEventListener('input',function(e){
   var t=e.target,m=D().meta;
   if(t.dataset.in==='hq'){var q=t.value.trim().toLowerCase(),n=0;Array.prototype.forEach.call(document.querySelectorAll('#faq details'),function(d){var on=!q||d.textContent.toLowerCase().indexOf(q)>=0;d.hidden=!on;if(on)n++});$('faq-none').hidden=n>0;return}
+  if(t.dataset.in==='gq'){S.gab.q=t.value;var p=t.selectionStart;render();var g=$('gq');if(g){g.focus();g.setSelectionRange(p,p)}return}
   if(t.dataset.in==='naam'){m.naam=t.value;if(m.naamOk){m.naamOk=false;render();var n=$('f-naam');if(n){n.focus();n.setSelectionRange(n.value.length,n.value.length)}}}
 });
 document.addEventListener('change',function(e){
