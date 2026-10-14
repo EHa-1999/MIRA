@@ -309,6 +309,7 @@ h1,h2,h3,h4,p{margin:0}
 .m-ovz,.r-ovz{--mc:var(--fg);--ms:var(--surface2)}.m-ond,.r-ond{--mc:var(--accent);--ms:var(--accent-soft)}.m-meta,.r-meta{--mc:var(--blue);--ms:var(--blue-soft)}
 .m-toeg,.r-toeg{--mc:var(--violet);--ms:var(--violet-soft)}.m-anon,.r-anon{--mc:var(--fg);--ms:color-mix(in srgb,var(--fg) 9%,var(--surface))}
 .m-clas,.r-clas{--mc:var(--amber);--ms:var(--amber-soft)}.m-waar,.r-waar{--mc:var(--green);--ms:var(--green-soft)}
+.selhint{display:flex;gap:8px;align-items:flex-start;padding:8px 10px;border:1px dashed var(--mc);border-radius:8px;background:var(--surface);font-size:12.5px;color:var(--muted)}.selhint b{display:block;color:var(--fg);font-weight:600}.selhint svg{flex:none;color:var(--mc);margin-top:2px}
 .m-gab,.r-gab{--mc:var(--accent);--ms:var(--accent-soft)}
 .glist{display:flex;flex-direction:column;gap:4px;margin-top:8px}.grow{display:grid;gap:1px;text-align:left;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);font-size:12.5px}.grow:hover{border-color:var(--accent)}.grow span,.gcard span{color:var(--muted);font-size:11.5px}.gcard{display:grid;gap:1px;margin:8px 0}.gcard b{font-size:14px}
 .mrules{margin-top:6px;font-size:12.5px}.mrules summary{cursor:pointer;color:var(--accent);font-weight:500}.mrules ul{margin:6px 0 0;padding-left:18px;list-style:disc;display:flex;flex-direction:column;gap:4px}
@@ -1285,6 +1286,7 @@ function brOk(t){return !!BR(t).ok}
 function brRo(p){return '<span class="plh l'+p.ppl+' ro'+(brOk()?'':' pv')+'">'+p.ph+'</span>'}
 function brShown(t){t=t||S.type;var a=AN(t);return brItems(t).filter(function(p){var h=HIT[p.id],c=h&&h.k?D(t).comp[h.k]:null;return p.on&&!p.hid&&!(a.applied&&a.dec[p.id]==='lak')&&!(h&&h.k==='saldo'&&c&&known(c,t))}).length}
 function brOn(){return assist()&&S.tab==='anon'&&AN().sub==='bron'&&!isDs()}
+function brSelOk(){return assist()&&S.tab==='anon'&&!isDs()}
 function brSpan(p){
   var b=BR(),dec=p.ppl<=b.ppl;
   if(!p.on)return '<span class="phn'+(b.exp===p.id?' on':'')+'" data-act="brexp" data-id="'+p.id+'">'+esc(p.org)+'</span>';
@@ -1328,10 +1330,10 @@ function brHtml(){
     '<div class="accstate warn"><b>Voorvertoning, nog niet bevestigd</b><span>Dit is wat het programma voorstelt. Laat staan wat onterecht is gemarkeerd, voeg toe wat is gemist, en bevestig daarna.</span><div class="rowb" style="justify-content:flex-start;margin-top:4px"><button class="btn primary sm" data-act="brok">Bevestig de anonimisering</button></div></div>';
   var nh=on.filter(function(x){return x.hdr}).length;
   return '<div class="form">'+st+'<div class="accstate off"><b>'+on.length+' geanonimiseerd, '+vis+' zichtbaar op dit niveau</b>'+(its.some(function(x){return x.hdr})?'<span>'+(on.length-nh)+' in de tekst, '+nh+' in de kenmerken van het bestand.</span>':'')+'<span>Elk persoonsgegeven is vervangen door een plaatshouder. De waarde zelf is versleuteld bewaard; wie het niveau heeft, ziet het origineel.</span></div>'+
-    '<div class="ctl"><span>Bekijk op niveau</span><div class="seg" role="group">'+BRL.map(function(x,i){return '<button aria-pressed="'+(b.ppl===i)+'" data-act="brppl" data-v="'+i+'" data-notr>'+x[0]+'</button>'}).join('')+'</div></div><p class="hint">'+BRL[b.ppl][1]+' Het niveau volgt uit de autorisatie van wie kijkt.</p>'+pick+
+    '<div class="ctl"><span>Bekijk op niveau</span><div class="seg" role="group">'+BRL.map(function(x,i){return '<button aria-pressed="'+(b.ppl===i)+'" data-act="brppl" data-v="'+i+'" data-notr>'+x[0]+'</button>'}).join('')+'</div></div><p class="hint">'+BRL[b.ppl][1]+' Het niveau volgt uit de autorisatie van wie kijkt.</p>'+(pick||'<div class="selhint">'+tl('redact')+'<span><b>Zelf toevoegen</b>Selecteer tekst in het document om iets te anonimiseren dat het programma heeft gemist. De soort wordt geraden; je kunt haar aanpassen.</span></div>')+
     '<div class="form" style="padding:0;gap:6px">'+its.filter(function(x){return !x.hdr}).map(brCard).join('')+'</div>'+
     (its.some(function(x){return x.hdr})?'<h3 class="fpt">In de kenmerken van het bestand</h3><p class="hint" style="margin:0">Deze namen staan niet op de pagina, maar wel in het bestand. Ze reizen mee wanneer het bestand wordt gedeeld. Bij publicatie worden de overige kenmerken, zoals sjabloon en bewerkingstijd, niet meegenomen.</p><div class="form" style="padding:0;gap:6px">'+its.filter(function(x){return x.hdr}).map(brCard).join('')+'</div>':'')+
-    '<p class="hint">Selecteer tekst in het document om zelf iets te anonimiseren. De soort wordt geraden; je kunt haar aanpassen.</p></div>';
+    '</div>';
 }
 function brManual(){
   var ro=brRead();if(!brOn()&&!ro)return;var root=document.querySelector('.wd-desk');if(!root)return;
@@ -2607,11 +2609,13 @@ document.addEventListener('click',function(e){
   ACT[b.dataset.act](b.dataset);
 });
 document.addEventListener('mouseup',function(e){
-  if(!brOn()||!e.target.closest||!e.target.closest('.wd-desk')||e.target.closest('[data-act]'))return;
+  if(!brSelOk()||!e.target.closest||!e.target.closest('.wd-desk')||e.target.closest('[data-act]'))return;
   var sel=window.getSelection(),x=sel?String(sel).trim():'';
   if(x.length<2||x.length>80||/\n/.test(x))return;
-  if(brItems().some(function(p){return p.org===x}))return;
-  BR().pick={t:x,ty:brGuess(x)};BR().exp=null;render();var v=document.querySelector('.p-view'),c=document.querySelector('.brpick');if(v&&c)c.scrollIntoView({block:'center'});
+  var was=AN().sub!=='bron';AN().sub='bron';
+  var hit=brItems().filter(function(p){return p.org===x})[0];
+  if(hit){BR().pick=null;BR().exp=hit.id;render();var cd=document.getElementById('bc-'+hit.id);if(cd)cd.scrollIntoView({block:'center'});toast(hit.on?'Dit staat al in de lijst en is geanonimiseerd.':'Dit staat al in de lijst. Kies Toch anonimiseren.');return}
+  BR().pick={t:x,ty:brGuess(x)};BR().exp=null;render();if(was)toast('Geopend in Bij de bron, om je selectie te anonimiseren.');var v=document.querySelector('.p-view'),c=document.querySelector('.brpick');if(v&&c)c.scrollIntoView({block:'center'});
 });
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape'&&$('layer').innerHTML){closeDlg();return}

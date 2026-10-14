@@ -2,6 +2,9 @@
 
 Het versienummer staat in `VERSION`. Bij elke nieuwe versie: nummer ophogen, hier een regel toevoegen, `python3 build.py` draaien.
 
+## Versie 31 · 14-10-2026
+- Anonimiseren: zelf tekst selecteren werkt weer zichtbaar. De uitleg Zelf toevoegen staat bovenaan in Bij de bron in plaats van onder de lijst. Selecteren werkt ook vanuit Signaleren; het paneel springt dan naar Bij de bron. Selecteer je iets wat al in de lijst staat, dan opent die kaart met een melding, in plaats van dat er niets gebeurt.
+
 ## Versie 30 · 13-10-2026
 - In lijn met de e-mailarchivering. Metadateren toont bij elk stuk Zakelijk of persoonlijk; bij e-mail met de eigen regels: tien dagen bedenktijd, persoonlijk versleuteld en buiten de Woo, terugzetten op verzoek, bedenktijd stil bij afwezigheid.
 - Adresboek als onderdeel van het paneel, alleen in de mailomgeving: zoeken, een vermelding bekijken en toevoegen aan Cc.
