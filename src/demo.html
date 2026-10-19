@@ -310,6 +310,16 @@ h1,h2,h3,h4,p{margin:0}
 .m-toeg,.r-toeg{--mc:var(--violet);--ms:var(--violet-soft)}.m-anon,.r-anon{--mc:var(--fg);--ms:color-mix(in srgb,var(--fg) 9%,var(--surface))}
 .m-clas,.r-clas{--mc:var(--amber);--ms:var(--amber-soft)}.m-waar,.r-waar{--mc:var(--green);--ms:var(--green-soft)}
 .selhint{display:flex;gap:8px;align-items:flex-start;padding:8px 10px;border:1px dashed var(--mc);border-radius:8px;background:var(--surface);font-size:12.5px;color:var(--muted)}.selhint b{display:block;color:var(--fg);font-weight:600}.selhint svg{flex:none;color:var(--mc);margin-top:2px}
+.lkw{position:relative}
+.lkl{position:absolute;left:0;right:0;top:calc(100% + 3px);z-index:6;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);padding:4px;display:flex;flex-direction:column;gap:2px;max-height:260px;overflow:auto;list-style:none;margin:0}
+.lkl li[role="option"]{display:grid;gap:1px;padding:6px 8px;border-radius:6px;cursor:pointer;font-size:12.5px}.lkl li b{font-weight:500}.lkl li small{color:var(--muted);font-size:11.5px}.lkl .mono{font-family:var(--mono);font-size:11px}
+.lkl li[aria-selected="true"],.lkl li[role="option"]:hover{background:var(--accent-soft)}.lkl mark{background:var(--amber-soft);color:inherit;font-weight:600;border-radius:2px}
+.lkm{padding:6px 8px;color:var(--muted);font-size:12.5px}.lkm.busy::before{content:"";display:inline-block;width:10px;height:10px;margin-right:7px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:lkSpin .7s linear infinite;vertical-align:-1px}
+@keyframes lkSpin{to{transform:rotate(360deg)}}@media (prefers-reduced-motion:reduce){.lkm.busy::before{animation:none}}
+.lkd{display:flex;flex-direction:column;gap:5px}
+.lkc{display:flex;align-items:center;gap:7px;padding:3px 3px 3px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);font-size:12.5px}.lkc>span:not(.tl):not(.lkl0){flex:1;min-width:0;display:grid}.lkc>.tl{flex:none}.lkl0{flex:none}.lkc small{color:var(--muted);font-size:11.5px}.lkc .mono{font-family:var(--mono);font-size:11px}.lkc .tl{color:var(--accent)}
+.lkc button{width:26px;height:26px;flex:none;display:grid;place-items:center;border-radius:5px;color:var(--muted);font-size:16px}.lkc button:hover{background:var(--red-soft);color:var(--red)}.lkl0{width:26px;display:grid;place-items:center;color:var(--muted)}
+.lks{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;font-size:12px;color:var(--muted)}.lks button{display:inline-flex;gap:4px;align-items:center;padding:1px 8px;border:1px dashed var(--accent);border-radius:99px;color:var(--accent);font-size:12px}.lks button:hover{background:var(--accent-soft)}.lks .tl{width:14px;height:14px}
 .m-gab,.r-gab{--mc:var(--accent);--ms:var(--accent-soft)}
 .glist{display:flex;flex-direction:column;gap:4px;margin-top:8px}.grow{display:grid;gap:1px;text-align:left;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);font-size:12.5px}.grow:hover{border-color:var(--accent)}.grow span,.gcard span{color:var(--muted);font-size:11.5px}.gcard{display:grid;gap:1px;margin:8px 0}.gcard b{font-size:14px}
 .mrules{margin-top:6px;font-size:12.5px}.mrules summary{cursor:pointer;color:var(--accent);font-weight:500}.mrules ul{margin:6px 0 0;padding-left:18px;list-style:disc;display:flex;flex-direction:column;gap:4px}
@@ -849,13 +859,28 @@ var TRAP={1:'Ingesloten kopie zonder herkomst',2:'Kopie met vastgelegde herkomst
 var CLS={raad:{lab:'Besluitvorming gemeenteraad',waard:'Blijvend te bewaren',jaren:null},onderb:{lab:'Onderbouwing bij besluitvorming',waard:'Blijvend te bewaren',jaren:null},beleid:{lab:'Beleidsvoorbereiding',waard:'Te vernietigen na 10 jaar',jaren:10}};
 
 var S,D0={tekst:1,rekenblad:1,presentatie:1,mail:1};
-function mk(naam,id,cls){return{naam:naam,naam0:naam,id:id,naamOk:false,cls:cls,cls0:cls,clsOk:false,tref:[],wzd:{}}}
+function mk(naam,id,cls){return{naam:naam,naam0:naam,id:id,naamOk:false,cls:cls,cls0:cls,clsOk:false,tref:[],wzd:{},aard:null,eig:null,zaak:'',doss:[],bep:null}}
+var MZAKEN=[['Z-2026-01837','Verklaring van geen bedenkingen zonnepark De Hoge Weide','Omgevingsvergunning','In behandeling'],
+ ['Z-2026-01902','Subsidieaanvraag zonnepark De Hoge Weide','Subsidie','Ontvangen'],
+ ['Z-2026-00412','Partiële herziening bestemmingsplan buitengebied','Bestemmingsplan','In behandeling'],
+ ['Z-2026-02210','Participatietraject energielandschap','Participatie','In behandeling'],
+ ['Z-2026-006120','Woo-verzoek herinrichting Houtplein','Woo-verzoek','In behandeling'],
+ ['Z-2025-011873','Kapvergunning Houtplein','Omgevingsvergunning','Afgehandeld']];
+var MDOSS=[['P-2026-044','Zonnepark De Hoge Weide','Projectdossier'],['R-2026-019','Raadsvergadering 29 oktober 2026','Vergaderdossier'],['B-2026-012','Regionale Energiestrategie','Beleidsdossier'],['P-2026-031','Herinrichting Houtplein','Projectdossier'],['P-2025-118','Fietsenstalling Stationsplein','Projectdossier']];
+var MSUG={tekst:{z:'Z-2026-01837',d:['R-2026-019']},presentatie:{z:'Z-2026-01837',d:['R-2026-019']},rekenblad:{z:'Z-2026-01837',d:['B-2026-012']},mail:{z:'Z-2026-01837',d:['P-2026-044']}};
+var TEAM=['Noor Bakker','Sem de Wit','Fatima El Amrani','Pieter de Boer'];
+function mzaak(nr){return MZAKEN.filter(function(r){return r[0]===nr})[0]}
+function mdos(nr){return MDOSS.filter(function(r){return r[0]===nr})[0]}
+function auteur(){return me().split(', ')[0]}
+function locDos(t){t=t||S.type;if(t==='mail')return null;var x=SVN[D(t).loc||'zp'];return x&&x.k==='dos'?x.nr:null}
+function allDoss(t){var l=locDos(t),d=D(t).meta.doss.slice();if(l&&d.indexOf(l)<0)d.unshift(l);return d}
+function persBlock(t){var m=D(t).meta;return m.zaak||allDoss(t).length?'link':''}
 function mailDoc(){return{status:'concept',achteraf:false,cc:[],keuze:{rv:null,rb:null},comp:{
   rv:{naam:'Bijlage Raadsvoorstel',ico:'doc',kind:'att',doc:'tekst',in:true},
   rb:{naam:'Bijlage Opbrengstberekening',ico:'table',kind:'att',doc:'rekenblad',in:true},
   citaat:{naam:'Geciteerd bericht provincie',ico:'mail',kind:'inc',in:true}},
   meta:mk('Raadsvoorstel zonnepark De Hoge Weide','e81c0d36-71fa','raad')}}
-function fresh(){return{gab:{q:'',sel:null},
+function fresh(){return{gab:{q:'',sel:null},lk:{k:null,q:'',i:0,busy:false},
   view:S?S.view:'doc',rib:S?S.rib:'oa',ctl:S?S.ctl:ctl0(),pane:S?S.pane:true,obj:S?S.obj:'samen',type:S?S.type:'tekst',tv:S?S.tv:'nu',env:S?S.env:'ms',viewer:'opsteller',
   latest:{opbrengst:3,explo:1,kaart:2,spec:2},
   docs:{
@@ -1136,23 +1161,28 @@ function usedHtml(){
   return '<div class="used">'+u.map(function(x){return '<div class="oitem"><div class="ohead"><span class="ic">'+I[x.t==='mail'?'mail':x.t==='tekst'?'doc':'chart']+'</span><span class="nm">'+esc(x.naam)+'<small>'+esc(x.wat)+' · '+esc(x.status)+'</small></span>'+
     '<span class="pills"><span class="pill '+(x.stale?'p-amber':'p-green')+'">'+(x.stale?'Toont versie '+x.v+' · loopt achter':'Toont versie '+x.v)+'</span><button class="link" data-act="goto" data-t="'+x.t+'">Open</button></span></div></div>'}).join('')+'</div>';
 }
-var FLD={aard:['Zakelijk of persoonlijk','afgeleid'],id:['Identificatie','afgeleid'],naam:['Naam','voorgesteld'],agg:['Aggregatieniveau','afgeleid'],av:['Archiefvormer','afgeleid'],bij:['Hoort bij','afgeleid'],cls:['Classificatie','voorgesteld'],waard:['Waardering en bewaartermijn','afgeleid'],bep:['Beperking gebruik','afgeleid'],tref:['Trefwoord','gevraagd']};
-function baseBep(){return (S.type==='tekst'||S.type==='presentatie')?'Openbaar':'Intern'}
+var FLD={aard:['Zakelijk of persoonlijk','gevraagd'],aut:['Auteur','afgeleid'],eig:['Eigenaar','gekozen'],zaak:['Zaak','gevraagd'],dos:['Dossiers','gevraagd'],id:['Identificatie','afgeleid'],naam:['Naam','voorgesteld'],agg:['Aggregatieniveau','afgeleid'],av:['Archiefvormer','afgeleid'],bij:['Hoort bij','afgeleid'],cls:['Classificatie','voorgesteld'],waard:['Waardering en bewaartermijn','afgeleid'],bep:['Beperking gebruik','afgeleid'],tref:['Trefwoord','gevraagd']};
+function bep0(){return (S.type==='tekst'||S.type==='presentatie')?'Openbaar':'Intern'}
+function baseBep(){return D().meta.bep||bep0()}
 function claimsFor(f){
   var m=D().meta,who=me(),list=[],mail=S.type==='mail';
   function C(w,wie,wan,waarom,waarop,hoe,gezag){return{w:w,wie:wie,wan:wan,waarom:waarom,waarop:waarop,hoe:hoe,gezag:gezag}}
-  if(f==='aard')list=[C('Zakelijk','XENA-platform','02-10-2026',mail?'Een bericht dat bij een dossier en een zaak hoort, is zakelijk.':'Een stuk in een dossier is zakelijk.','Dossier Zonnepark De Hoge Weide · zaak Z-2026-01837','Afgeleid door een vastgestelde regel','Afgeleid')];
+  if(f==='aard')list=m.aard?[C(m.aard==='zakelijk'?'Zakelijk':'Persoonlijk',who,TODAY,'De opsteller kiest zelf of een stuk zakelijk of persoonlijk is, en is daarvoor verantwoordelijk.','Gekozen in het paneel.','Handmatig vastgesteld','Besloten')]:[];
+  if(f==='aut')list=[C(auteur(),'XENA-platform','02-10-2026','De auteur is wie het stuk heeft aangemaakt.','De aanmelding bij het eerste opslaan.','Afgeleid uit de aanmelding','Afgeleid')];
+  if(f==='eig')list=[C(m.eig||auteur(),m.eig?who:'XENA-platform',m.eig?TODAY:'02-10-2026',m.eig?'De eigenaar draagt het stuk over aan een collega.':'Wie een stuk aanmaakt, is er eigenaar van tot hij het overdraagt.',m.eig?'Overgedragen in het paneel.':'De aanmelding bij het eerste opslaan.',m.eig?'Handmatig vastgesteld':'Afgeleid uit de aanmelding',m.eig?'Besloten':'Afgeleid')];
+  if(f==='zaak')list=m.zaak?[C(m.zaak,who,TODAY,'De zaak komt uit het zaaksysteem, dat leidend blijft. Hier ligt alleen de koppeling vast.','Gekozen in het paneel.','Handmatig vastgesteld','Besloten')]:[];
+  if(f==='dos')list=allDoss(S.type).map(function(nr){var l=nr===locDos();return C(nr,l?'XENA-platform':who,l?'02-10-2026':TODAY,l?'Het stuk is opgeslagen in de map van dit dossier. Die plek bepaalt classificatie en bewaring.':'Een dossier kan naar een stuk verwijzen zonder het te kopiëren.',l?'De opslaglocatie.':'Gekozen in het paneel.',l?'Afgeleid uit de opslaglocatie':'Handmatig vastgesteld',l?'Afgeleid':'Besloten')});
   if(f==='id')list=[C(m.id,'XENA-platform','02-10-2026','Elk object krijgt bij het eerste opslaan een identificatie.','Dit stuk is op die datum voor het eerst opgeslagen.','Toegekend door het platform','Afgeleid')];
   if(f==='naam'){list=[C(m.naam0,'Assistent','02-10-2026',mail?'De naam volgt het onderwerp van het bericht.':'De naam volgt de titel van het stuk.',mail?'De onderwerpregel.':'De titel van het stuk.','Voorgesteld door een programma','Voorstel')];
     if(m.naamOk)list.unshift(C(m.naam,who,TODAY,'De opsteller bepaalt de naam van het stuk.','Bevestigd in het paneel.','Handmatig vastgesteld','Besloten'))}
   if(f==='agg')list=[C('Archiefstuk','XENA-platform','02-10-2026','Een enkel stuk is een archiefstuk.','Dit is één stuk binnen een dossier.','Afgeleid door een vastgestelde regel','Afgeleid')];
-  if(f==='av')list=[C('Gemeente Haarlem','Dossier Zonnepark De Hoge Weide','02-10-2026','Een stuk neemt de archiefvormer van zijn dossier over.','Dit stuk is in dat dossier aangemaakt.','Overgeërfd van het dossier','Overgenomen')];
+  if(f==='av')list=[C('Gemeente Haarlem','XENA-platform','02-10-2026','De archiefvormer is de organisatie waarvoor de auteur werkt.','De aanmelding van de auteur.','Afgeleid uit de aanmelding','Afgeleid')];
   if(f==='bij')list=[C('Dossier Zonnepark De Hoge Weide · zaak Z-2026-01837','Zaaksysteem','02-10-2026','De zaakverwijzing wordt overgenomen uit het systeem dat de zaak beheert.','Het stuk is vanuit het dossier geopend.','Overgenomen uit een bronsysteem','Overgenomen')];
   if(f==='cls'){list=[C(CLS[m.cls0].lab,'Assistent','02-10-2026','Het soort stuk bepaalt een eerste voorstel.',mail?'Het bericht draagt een raadsvoorstel als bijlage.':'Het gebruikte sjabloon.','Voorgesteld door een programma','Voorstel')];
     if(m.clsOk)list.unshift(C(CLS[m.cls].lab,who,TODAY,'De opsteller kent het werkproces waarin het stuk is gemaakt.','Bevestigd in het paneel.','Handmatig vastgesteld','Besloten'))}
   if(f==='waard')list=m.clsOk?[C(CLS[m.cls].waard,'Selectielijstregel (demo)',TODAY,'De waardering volgt uit de classificatie van het stuk, niet uit zijn onderdelen.','Classificatie: '+CLS[m.cls].lab+', bevestigd door de opsteller.','Afgeleid door een vastgestelde regel','Afgeleid')]:[];
   if(f==='bep'){var r=restrictions(S.type);list=r.length?r.map(function(x){return C(x.t,'XENA-platform',TODAY,'Een stuk erft de strengste beperking van zijn onderdelen.','Overgenomen van '+x.van+'.','Afgeleid door een vastgestelde regel','Afgeleid')}):
-    [C(baseBep(),'Dossier Zonnepark De Hoge Weide','02-10-2026','Het dossier bepaalt de beperking zolang geen onderdeel een strengere heeft.','Geen onderdeel met een bekende beperking.','Overgeërfd van het dossier','Overgenomen')]}
+    [m.bep?C(m.bep,who,TODAY,'De opsteller kiest de beperking. Lager dan de onderdelen kan niet.','Gekozen in het paneel.','Handmatig vastgesteld','Besloten'):C(bep0(),'Assistent','02-10-2026','Een voorstel op basis van het soort stuk, tot de opsteller kiest.','Geen onderdeel met een bekende beperking.','Overgeërfd van het dossier','Overgenomen')]}
   if(f==='v-rec')return claimsFor('waard');
   if(f==='v-priv')list=[C(privValue(S.type),'Assistent (detectie)',TODAY,'Persoonsgegevens worden door een programma gesignaleerd, niet vastgesteld.','De vindplaatsen in het stuk en in de onderdelen.','Voorgesteld door een programma','Voorstel')];
   if(f==='v-sec'){var sr=secRaised(S.type);list=sr.length?[C('Vertrouwelijk','XENA-platform',TODAY,'Een stuk is minstens zo vertrouwelijk als zijn strengste onderdeel. Verhogen mag afgeleid gebeuren.','Overgenomen van '+sr[0].van+'.','Afgeleid door een vastgestelde regel','Afgeleid')]:
@@ -1171,23 +1201,48 @@ function fld(f,control,hint,kind){
   return '<div class="fld"><div class="lab"><label for="f-'+f+'">'+FLD[f][0]+'</label><span class="kind">'+(kind||FLD[f][1])+'</span><button class="link wzd" data-act="wzd" data-f="'+f+'" aria-expanded="'+!!open+'">Wie zegt dat?</button></div>'+control+(hint?'<div class="hint'+(hint[1]?' warn':'')+'">'+hint[0]+'</div>':'')+(open?claimHtml(f):'')+'</div>';
 }
 function metaHtml(){
-  var m=D().meta,r=restrictions(S.type),dirty=!m.naamOk||!m.clsOk,mail=S.type==='mail';
+  var m=D().meta,r=restrictions(S.type),dirty=!m.aard||!m.naamOk||!m.clsOk,mail=S.type==='mail';
   return '<div class="form">'+
-  fld('aard','<div class="inp derived" id="f-aard">Zakelijk</div>',[mail?'Het bericht hoort bij een dossier en een zaak, en is daarmee zakelijk. Persoonlijk kan dan niet.':'Het stuk staat in een dossier en is daarmee zakelijk.'])+
+  fld('aard','<div class="seg" role="group" id="f-aard" aria-label="Zakelijk of persoonlijk">'+[['zakelijk','Zakelijk'],['persoonlijk','Persoonlijk']].map(function(b){return '<button data-act="maard" data-v="'+b[0]+'" aria-pressed="'+(m.aard===b[0])+'">'+b[1]+'</button>'}).join('')+'</div>',
+     m.aard==='persoonlijk'?[mail?'Persoonlijk: na verzending in de map Persoonlijk, versleuteld met je eigen sleutel en buiten het zoekbereik voor de Woo.':'Persoonlijk: het stuk hoort op je persoonlijke schijf. Het valt buiten het archief en buiten de Woo.']:m.aard?null:['<span>Voorstel: zakelijk.</span> <span>'+(mail?'Het bericht gaat over een lopende zaak.':'Het stuk is gemaakt met het sjabloon Raadsvoorstel.')+'</span> <span>Jij kiest; jij bent daarvoor verantwoordelijk.</span>'],m.aard?'gekozen':null)+
   (mail?'<details class="mrules"><summary>Eigen regels voor e-mail</summary><ul><li>Na ontvangst heb je tien dagen bedenktijd. Doe je niets, dan wordt een bericht zakelijk.</li><li>Persoonlijk betekent: in de map Persoonlijk, versleuteld met je eigen sleutel en buiten het zoekbereik voor de Woo.</li><li>Binnen de bedenktijd kun je zakelijk nog terugzetten. Daarna alleen op verzoek, bij de informatiebeheerder.</li><li>Gekoppeld aan een zaak of dossier, of onder een lopend Woo-verzoek: niet persoonlijk.</li><li>Met een afwezigheidsbericht aan staat de bedenktijd stil.</li><li>Filters mogen een bericht niet naar Persoonlijk verplaatsen.</li></ul></details>':'')+
   fld('id','<div class="inp derived" id="f-id" data-notr style="font-family:var(--mono);font-size:12px">'+m.id+'</div>')+
   fld('naam','<input class="inp" id="f-naam" data-in="naam"'+(m.naam===m.naam0?' data-trv':'')+' value="'+esc(m.naam)+'">',m.naamOk?null:[mail?'Voorgesteld uit het onderwerp. Je kunt het aanpassen.':'Voorgesteld uit de titel. Je kunt het aanpassen.'],m.naamOk?'bevestigd':null)+
+  fld('aut','<div class="inp derived" id="f-aut" data-notr>'+esc(auteur())+'</div>',['Wie het stuk heeft aangemaakt. Volgt uit de aanmelding.'])+
+  fld('eig','<select class="inp" id="f-eig" data-ch="eig">'+TEAM.concat(TEAM.indexOf(auteur())<0?[auteur()]:[]).map(function(n){var cur=(m.eig||auteur())===n;return '<option value="'+esc(n)+'"'+(cur?' selected':'')+' data-notr>'+esc(n)+(n===auteur()?' ('+tr('auteur')+')':'')+'</option>'}).join('')+'</select>',[m.eig&&m.eig!==auteur()?'Overgedragen. De nieuwe eigenaar beheert het stuk; de auteur blijft vastgelegd.':'Jij bent eigenaar, omdat jij het stuk hebt aangemaakt. Je kunt het overdragen aan een collega.'],m.eig?'gekozen':'afgeleid')+
+  (m.aard==='persoonlijk'?'':
   fld('agg','<div class="inp derived" id="f-agg">Archiefstuk</div>')+
-  fld('av','<div class="inp derived" id="f-av">Gemeente Haarlem</div>',['Overgenomen van het dossier.'])+
-  fld('bij','<div class="inp derived" id="f-bij">Dossier Zonnepark De Hoge Weide · zaak Z-2026-01837</div>')+
-  fld('cls','<select class="inp" id="f-cls" data-ch="cls">'+Object.keys(CLS).map(function(k){return '<option value="'+k+'"'+(m.cls===k?' selected':'')+'>'+CLS[k].lab+'</option>'}).join('')+'</select>',m.clsOk?null:['Voorgesteld op basis van het soort stuk. Controleer en leg vast.'],m.clsOk?'bevestigd':null)+
+  fld('av','<div class="inp derived" id="f-av">Gemeente Haarlem</div>',['De organisatie van de auteur.'])+
+  mlkSug()+
+  fld('zaak','<div class="lkd">'+(m.zaak?mlkChip('zaak',m.zaak):mlk('zaak'))+'</div>',['De zaak komt uit het zaaksysteem, dat leidend blijft. Hier ligt alleen de koppeling vast.'],m.zaak?'gekozen':null)+
+  fld('dos','<div class="lkd">'+allDoss(S.type).map(function(d){return mlkChip('dos',d,d===locDos())}).join('')+mlk('dos')+'</div>',[(locDos()?'Het eerste dossier volgt uit de opslaglocatie en bepaalt classificatie en bewaring. Andere dossiers verwijzen naar het stuk, zonder kopie.':'Een stuk kan in meer dossiers zitten. Het dossier verwijst naar het stuk; er wordt niets gekopieerd.')],allDoss(S.type).length?(locDos()?'deels afgeleid':'gekozen'):null))+
+  (m.aard==='persoonlijk'?'':fld('cls','<select class="inp" id="f-cls" data-ch="cls">'+Object.keys(CLS).map(function(k){return '<option value="'+k+'"'+(m.cls===k?' selected':'')+'>'+CLS[k].lab+'</option>'}).join('')+'</select>',m.clsOk?null:['Voorgesteld op basis van het soort stuk. Controleer en leg vast.'],m.clsOk?'bevestigd':null)+
   fld('waard','<div class="inp derived" id="f-waard">'+esc(CLS[m.cls].waard)+'</div>',m.clsOk?['Volgt uit de classificatie van dit stuk, niet uit de onderdelen. <button class="link" data-act="tab" data-t="clas">Zie Classificeren</button>']:['Voorlopig. De classificatie is nog een voorstel; leg die eerst vast.',1],m.clsOk?null:'voorlopig')+
-  fld('bep','<div class="chips" id="f-bep"><span class="chip d">'+baseBep()+'</span>'+r.map(function(x){return '<span class="chip v">'+I.lock+' '+esc(x.t)+'</span>'}).join('')+'</div>',r.length?['Overgenomen van '+esc(r.map(function(x){return x.van}).join(' en van '))+'. Een stuk erft de strengste beperking van zijn onderdelen. <button class="link" data-act="tab" data-t="clas">Zie Classificeren</button>']:null)+
+  fld('bep','<select class="inp" id="f-bep" data-ch="bep">'+['Openbaar','Intern','Vertrouwelijk'].map(function(v){return '<option value="'+v+'"'+(baseBep()===v?' selected':'')+'>'+v+'</option>'}).join('')+'</select>'+(r.length?'<div class="chips" style="margin-top:4px">'+r.map(function(x){return '<span class="chip v">'+I.lock+' '+esc(x.t)+'</span>'}).join('')+'</div>':''),
+     [(m.bep?'':'<span>Voorstel op basis van het soort stuk.</span> ')+(r.length?'<span>Overgenomen van '+esc(r.map(function(x){return x.van}).join(' en van '))+'.</span> <span>Een stuk erft de strengste beperking van zijn onderdelen; lager kan niet.</span> <button class="link" data-act="tab" data-t="clas">Zie Classificeren</button>':'Vertrouwelijk betekent versleuteld in de opslag.')],m.bep?'gekozen':'voorgesteld'))+
   fld('tref','<div class="chips">'+m.tref.map(function(t,i){return '<span class="chip">'+esc(t)+'<button data-act="untref" data-i="'+i+'" aria-label="Verwijder '+esc(t)+'">×</button></span>'}).join('')+'<input class="inp asked" id="f-tref" data-key="tref" placeholder="Typ en druk op Enter" style="flex:1 1 140px;width:auto"></div>',
      ['Suggesties: '+['zonnepark','hernieuwbare energie','verklaring van geen bedenkingen'].filter(function(t){return m.tref.indexOf(t)<0}).map(function(t){return '<button class="link" data-act="tref" data-t="'+esc(t)+'">'+esc(t)+'</button>'}).join(' · ')])+
   (mail?'<div class="hint">Een e-mailbericht kan zijn beschrijving niet zelf dragen. De metagegevens staan alleen in het platform.</div>':'')+
   '<div class="rowb"><button class="btn primary" data-act="save"'+(dirty?'':' disabled')+'>Vastleggen</button>'+(dirty?'':'<span class="pill p-green" style="align-self:center">Vastgelegd</span>')+'</div></div>';
 }
+function mlkItems(k,q){var m=D().meta,ds=allDoss(S.type);q=(q||'').trim().toLowerCase();if(q.length<2)return [];
+  return (k==='zaak'?MZAKEN:MDOSS).filter(function(r){if(k==='dos'&&ds.indexOf(r[0])>=0)return false;return [r[0],r[1],tr(r[1]),r[2],tr(r[2])].join(' ').toLowerCase().indexOf(q)>=0}).slice(0,6)}
+function mhl(s,q){q=(q||'').trim();var i=q?s.toLowerCase().indexOf(q.toLowerCase()):-1;return i<0?esc(s):esc(s.slice(0,i))+'<mark>'+esc(s.slice(i,i+q.length))+'</mark>'+esc(s.slice(i+q.length))}
+function mlk(k){
+  var L=S.lk,on=L.k===k,q=on?L.q:'',open=on&&q.trim().length>=2,it=open&&!L.busy?mlkItems(k,q):[],id='f-'+k,lb='lk-'+k+'-l';
+  var h='<div class="lkw"><input type="text" id="'+id+'" class="inp" data-mlk="'+k+'" role="combobox" aria-autocomplete="list" aria-expanded="'+open+'" aria-controls="'+lb+'"'+(it.length?' aria-activedescendant="'+lb+'-'+L.i+'"':'')+' value="'+esc(q)+'" autocomplete="off" spellcheck="false" placeholder="'+(k==='zaak'?'Typ een zaaknummer of omschrijving':'Typ een dossiernummer of naam')+'">';
+  if(open){h+='<ul class="lkl" id="'+lb+'" role="listbox">';
+    if(L.busy)h+='<li class="lkm busy" role="presentation">'+(k==='zaak'?'Zoeken in het zaaksysteem…':'Zoeken in het register…')+'</li>';
+    else if(!it.length)h+='<li class="lkm" role="presentation">'+(k==='zaak'?'Geen zaak gevonden. Zaken komen uit het zaaksysteem; een nieuwe zaak maak je daar aan.':'Geen dossier gevonden.')+'</li>';
+    else h+=it.map(function(r,i){return '<li role="option" id="'+lb+'-'+i+'" aria-selected="'+(i===L.i)+'" data-act="mlkpick" data-k="'+k+'" data-v="'+r[0]+'"><b>'+mhl(tr(r[1]),q)+'</b><small><span class="mono" data-notr>'+mhl(r[0],q)+'</span> · <span>'+esc(r[2])+'</span>'+(r[3]?' · <span>'+esc(r[3])+'</span>':'')+'</small></li>'}).join('');
+    h+='</ul>'}
+  return h+'</div>'}
+function mlkChip(k,nr,locked){var r=k==='zaak'?mzaak(nr):mdos(nr);
+  return '<div class="lkc">'+tl(k==='zaak'?'flag':'folder')+'<span><span>'+esc(r?r[1]:nr)+'</span><small><span class="mono" data-notr>'+esc(nr)+'</span>'+(r?' · <span>'+esc(r[2])+'</span>'+(r[3]?' · <span>'+esc(r[3])+'</span>':''):'')+(locked?' · <span>opslaglocatie</span>':'')+'</small></span>'+(locked?'<span class="lkl0" title="Volgt uit de opslaglocatie. Verplaatsen gaat via Opslaan als.">'+I.lock+'</span>':'<button data-act="mlkdel" data-k="'+k+'" data-v="'+nr+'" title="Ontkoppelen" aria-label="Ontkoppelen">×</button>')+'</div>'}
+function mlkSug(){var g=MSUG[S.type],m=D().meta,ds=allDoss(S.type),b=[];if(!g)return '';
+  if(g.z&&!m.zaak)b.push('<button data-act="mlkpick" data-k="zaak" data-v="'+g.z+'">'+tl('flag')+'<span data-notr>'+g.z+'</span></button>');
+  g.d.forEach(function(d){if(ds.indexOf(d)<0)b.push('<button data-act="mlkpick" data-k="dos" data-v="'+d+'">'+tl('folder')+'<span data-notr>'+d+'</span></button>')});
+  return b.length?'<div class="lks"><span>Voorstel:</span>'+b.join('')+'</div>':''}
 /* ---------- module: anonimiseren ---------- */
 var GROND={e:['5.1 lid 2 e','persoonlijke levenssfeer'],d:['5.1 lid 1 d','bijzondere persoonsgegevens']};
 var H={
@@ -1813,6 +1868,7 @@ function meldingen(){
   if(onb&&samen())m.push(['grey',onb+(onb===1?' onderdeel zonder vastgelegde herkomst':' onderdelen zonder vastgelegde herkomst'),'ond']);
   if(t!=='mail'&&D().loc&&SVN[D().loc].k!=='dos')m.push(['amber',SVN[D().loc].k==='pers'?'Losse kopie op de persoonlijke schijf':'Opgeslagen buiten een dossier','meta']);
   if(!isDs()&&!brOk(t)&&brItems(t).some(function(p){return p.on}))m.push(['amber','Anonimisering is nog een voorvertoning','anon']);
+  if(!D().meta.aard)m.push(['amber','Nog niet gekozen: zakelijk of persoonlijk','meta']);
   if(X().uit)m.push(['grey','Toegankelijkheid is niet gecontroleerd','toeg']);
   else if((n=openCount(t)))m.push(['amber',n+(n===1?' bevinding over toegankelijkheid':' bevindingen over toegankelijkheid'),'toeg']);
   if(wfMineNow(t))m.push(['teal','Jouw stap in de procedure staat open','flow']);
@@ -1963,6 +2019,8 @@ var TF=[
  ['markt','Herkomst zichtbaar in het kantoorpakket zelf','Een weergavemodus voor gebonden onderdelen','Nu toont alleen het paneel aan welke versie iets vastzit.',4],
  ['markt','Markering die een formaatwissel overleeft','Semantische markering in beide formaatfamilies','Nu herstelt de adapter de markeringen bij het openen.',4],
  ['basis','Zakelijk of persoonlijk, met eigen regels voor e-mail','Aard vastleggen in het register','Bij e-mail: tien dagen bedenktijd, daarna alleen op verzoek terug.',2],
+ ['basis','Zaak en dossiers koppelen, met opzoeken tijdens het typen','Zaken opzoeken via de Zaken API, dossiers in het register','Het zaaksysteem blijft leidend. Gelijk aan de demo over e-mailarchivering.',2],
+ ['basis','Eigenaar overdragen','Eigenaar vastleggen in het register','De auteur blijft vastgelegd; de eigenaar beheert het stuk.',2],
  ['basis','Gemeentelijk adresboek in de mailomgeving','Adresboek opzoeken via CardDAV','Alleen binnen gemeenten met de Office Assistent. Opname is vrijwillig.',2],
  ['platform','Toegankelijkheid beoordelen','Nieuw · snel, alleen lezen','De enige bewerking die met de assistent meekomt.',1],
  ['platform','Structuur herstellen','Nieuw · op de achtergrond','Herstelt alleen wat eenduidig is.',1],
@@ -2477,6 +2535,14 @@ function doSend(mode){
 
 /* ---------- handelingen ---------- */
 var ACT={
+  maard:function(d){var m=D().meta,v=d.v;if(v==='persoonlijk'&&persBlock()){toast(S.type==='mail'?'Dit bericht is gekoppeld aan een zaak of dossier. Ontkoppel eerst; persoonlijk kan dan niet.':(locDos()?'Het stuk staat in de map van een dossier. Sla het eerst op buiten het dossier en ontkoppel zaak en dossiers.':'Het stuk is gekoppeld aan een zaak of dossier. Ontkoppel eerst.'));return}
+    m.aard=v;hood('Metagegevens vastleggen {object: '+m.id.slice(0,8)+', aard: '+v+'} → '+(v==='persoonlijk'?'buiten het archief en het Woo-zoekbereik':'zakelijk, bewaartermijn volgt uit de classificatie'));render()},
+  mlkpick:function(d){var m=D().meta,k=d.k,v=d.v;if(m.aard==='persoonlijk')m.aard='zakelijk';
+    if(k==='zaak'){m.zaak=v;hood('POST /zaken/api/v1/zaakinformatieobjecten → 201 · kenmerk in het register {zaak: '+v+'} · het zaaksysteem blijft leidend');toast('Gekoppeld aan zaak · '+v)}
+    else{if(m.doss.indexOf(v)<0)m.doss.push(v);hood('Register: verwijzing {dossier: '+v+', object: '+m.id.slice(0,8)+'} · geen kopie');toast('Opgenomen in dossier · '+v)}
+    S.lk={k:null,q:'',i:0,busy:false};render()},
+  mlkdel:function(d){var m=D().meta,k=d.k,v=d.v;if(k==='zaak')m.zaak='';else m.doss=m.doss.filter(function(x){return x!==v});
+    hood(k==='zaak'?'DELETE /zaken/api/v1/zaakinformatieobjecten/… → 204 · kenmerk verwijderd uit het register':'Register: verwijzing ingetrokken {dossier: '+v+', object: '+m.id.slice(0,8)+'}');toast('Ontkoppeld · '+v);render();var f=$('f-'+k);if(f)f.focus()},
   gsel:function(d){S.gab.sel=d.m;hood('CardDAV GET /gab/… → 200 · alleen de gedeelde velden');render()},
   gback:function(){S.gab.sel=null;render()},
   gcc:function(d){var m=D();if(m.cc.indexOf(d.m)<0)m.cc.push(d.m);hood('Adresboek → Cc: '+d.m);render();toast('Toegevoegd aan Cc.')},
@@ -2594,7 +2660,7 @@ var ACT={
   tref:function(d){D().meta.tref.push(d.t);render()},
   untref:function(d){D().meta.tref.splice(+d.i,1);render()},
   save:function(){
-    var m=D().meta,n=0;if(!m.naamOk){m.naamOk=true;n++}if(!m.clsOk){m.clsOk=true;n++}
+    var m=D().meta,n=0;if(!m.aard){toast('Kies eerst of het stuk zakelijk of persoonlijk is.');var a=$('f-aard');if(a)a.scrollIntoView({block:'center'});return}if(!m.naamOk){m.naamOk=true;n++}if(!m.clsOk){m.clsOk=true;n++}
     hood('gebeurtenis: metagegevens gewijzigd · '+(n+1)+' beweringen toegevoegd, voorstellen blijven bewaard');
     if(S.type==='mail')hood('beschrijving alleen in het platform: een e-mailbericht heeft geen drager voor metagegevens');
     else if(FAM[S.env].segment)hood('adapter: standaardeigenschappen, eigen eigenschappen en MDTO-profiel bijgewerkt in het geopende document');
@@ -2605,6 +2671,7 @@ var ACT={
 };
 document.addEventListener('click',function(e){
   var b=e.target.closest('[data-act]');
+  if(S.lk.k&&!e.target.closest('.lkw')){S.lk={k:null,q:'',i:0,busy:false};if(!b){render();return}}
   if(!b){var sc=e.target.closest('.wd-page [data-sec]');if(sc&&S.view==='doc'&&S.tab==='anon'){S.cur=+sc.dataset.sec;syncAn()}return}
   ACT[b.dataset.act](b.dataset);
 });
@@ -2617,9 +2684,14 @@ document.addEventListener('mouseup',function(e){
   if(hit){BR().pick=null;BR().exp=hit.id;render();var cd=document.getElementById('bc-'+hit.id);if(cd)cd.scrollIntoView({block:'center'});toast(hit.on?'Dit staat al in de lijst en is geanonimiseerd.':'Dit staat al in de lijst. Kies Toch anonimiseren.');return}
   BR().pick={t:x,ty:brGuess(x)};BR().exp=null;render();if(was)toast('Geopend in Bij de bron, om je selectie te anonimiseren.');var v=document.querySelector('.p-view'),c=document.querySelector('.brpick');if(v&&c)c.scrollIntoView({block:'center'});
 });
+function mlkFocus(){var f=$('f-'+S.lk.k);if(f){f.focus();var n=f.value.length;f.setSelectionRange(n,n)}}
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape'&&$('layer').innerHTML){closeDlg();return}
   var t=e.target;
+  if(t.dataset&&t.dataset.mlk&&S.lk.k===t.dataset.mlk){var it=S.lk.busy?[]:mlkItems(S.lk.k,S.lk.q),k=t.dataset.mlk;
+    if((e.key==='ArrowDown'||e.key==='ArrowUp')&&it.length){e.preventDefault();S.lk.i=(S.lk.i+(e.key==='ArrowDown'?1:it.length-1))%it.length;render();mlkFocus();return}
+    if(e.key==='Enter'&&it.length){e.preventDefault();ACT.mlkpick({k:k,v:it[S.lk.i][0]});var f=$('f-'+k);if(f)f.focus();return}
+    if(e.key==='Escape'){S.lk={k:null,q:'',i:0,busy:false};render();var g=$('f-'+k);if(g)g.focus();return}}
   if(e.key==='Enter'&&t.dataset&&t.dataset.key==='tref'){var v=t.value.trim();if(v){D().meta.tref.push(v);render();var n=$('f-tref');if(n)n.focus()}return}
   if((e.key==='Enter'||e.key===' ')&&t.dataset&&(t.dataset.act==='brtog'||t.dataset.act==='pscol')&&t.tagName!=='BUTTON'){e.preventDefault();ACT[t.dataset.act](t.dataset);return}
   if((e.key==='Enter'||e.key===' ')&&t.dataset&&t.dataset.act==='sel'&&t.tagName!=='BUTTON'){e.preventDefault();ACT.sel(t.dataset)}
@@ -2627,6 +2699,9 @@ document.addEventListener('keydown',function(e){
 document.addEventListener('input',function(e){
   var t=e.target,m=D().meta;
   if(t.dataset.in==='hq'){var q=t.value.trim().toLowerCase(),n=0;Array.prototype.forEach.call(document.querySelectorAll('#faq details'),function(d){var on=!q||d.textContent.toLowerCase().indexOf(q)>=0;d.hidden=!on;if(on)n++});$('faq-none').hidden=n>0;return}
+  if(t.dataset.mlk){var k=t.dataset.mlk;S.lk={k:k,q:t.value,i:0,busy:t.value.trim().length>=2};render();mlkFocus();clearTimeout(window.__mlkT);
+    if(S.lk.busy)window.__mlkT=setTimeout(function(){if(S.lk.k!==k)return;S.lk.busy=false;var n=mlkItems(k,S.lk.q).length;hood(k==='zaak'?'GET /zaken/api/v1/zaken?omschrijving="'+S.lk.q.trim()+'" (ZGW Zaken API) → '+n+' zaken':'GET /register/dossiers?q="'+S.lk.q.trim()+'" → '+n+' dossiers · alleen dossiers waar je bij mag');render();mlkFocus()},matchMedia('(prefers-reduced-motion: reduce)').matches?0:280);
+    return}
   if(t.dataset.in==='gq'){S.gab.q=t.value;var p=t.selectionStart;render();var g=$('gq');if(g){g.focus();g.setSelectionRange(p,p)}return}
   if(t.dataset.in==='naam'){m.naam=t.value;if(m.naamOk){m.naamOk=false;render();var n=$('f-naam');if(n){n.focus();n.setSelectionRange(n.value.length,n.value.length)}}}
 });
@@ -2635,6 +2710,8 @@ document.addEventListener('change',function(e){
   if(t.id==='lang'){setLang(t.value,true);render();return}
   if(t.dataset.ch==='rvg'){var an=AN();an.g[t.dataset.id]=t.value;an.applied=false;render();return}
   if(t.dataset.ch==='cls'){D().meta.cls=t.value;D().meta.clsOk=false;render()}
+  if(t.dataset.ch==='eig'){var m=D().meta;m.eig=t.value;hood('Register: eigenaar {object: '+m.id.slice(0,8)+'} → '+t.value+(t.value===auteur()?'':' · auteur blijft: '+auteur()));toast(t.value===auteur()?'Je bent weer eigenaar.':'Overgedragen aan · '+t.value);render()}
+  if(t.dataset.ch==='bep'){var m2=D().meta;m2.bep=t.value;hood('Metagegevens vastleggen {object: '+m2.id.slice(0,8)+', beperking: '+t.value+'}'+(t.value==='Vertrouwelijk'?' · versleuteld in de opslag':''));render()}
   if(t.closest('#layer'))checkDlg();
 });
 $('layer').addEventListener('click',function(e){if(e.target===$('layer'))closeDlg()});

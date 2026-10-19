@@ -2,6 +2,13 @@
 
 Het versienummer staat in `VERSION`. Bij elke nieuwe versie: nummer ophogen, hier een regel toevoegen, `python3 build.py` draaien.
 
+## Versie 32 · 19-10-2026
+- Metadateren vanuit Noor, die het stuk heeft aangemaakt. Velden die zij als auteur en eigenaar mag bepalen, zijn nu aan te passen; alleen wat het platform afleidt (identificatie, aggregatieniveau, archiefvormer, auteur, waardering) blijft vast.
+- Zakelijk of persoonlijk kies je zelf, met een voorstel. Persoonlijk kan niet zolang het stuk aan een zaak of dossier hangt. Bij persoonlijk vallen de archiefvelden weg.
+- Zaak en dossiers koppel je met een invulveld dat tijdens het typen voorstellen toont, zoals in de demo over e-mailarchivering, met voorstellen bij het stuk. Het dossier van de opslaglocatie staat er vast bij.
+- Nieuw: auteur (afgeleid) en eigenaar (over te dragen). Beperking gebruik is een keuze, met de onderdelen als ondergrens.
+- Melding in het overzicht zolang zakelijk of persoonlijk niet is gekozen. Vastleggen vraagt daar eerst om.
+
 ## Versie 31 · 14-10-2026
 - Anonimiseren: zelf tekst selecteren werkt weer zichtbaar. De uitleg Zelf toevoegen staat bovenaan in Bij de bron in plaats van onder de lijst. Selecteren werkt ook vanuit Signaleren; het paneel springt dan naar Bij de bron. Selecteer je iets wat al in de lijst staat, dan opent die kaart met een melding, in plaats van dat er niets gebeurt.
 
