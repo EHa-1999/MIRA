@@ -2,6 +2,10 @@
 
 Het versienummer staat in `VERSION`. Bij elke nieuwe versie: nummer ophogen, hier een regel toevoegen, `python3 build.py` draaien.
 
+## Versie 34 · 19-10-2026
+- Woo-categorie in Metadateren: afgeleid uit het documenttype, zelf te kiezen, of overgenomen van de zaak of het dossier. Een zaak of dossier met een categorie gaat voor op de eigen keuze; die vervalt bij het koppelen.
+- Openbaar maken: met een categorie uiterlijk twee weken na vaststelling of verzending (Woo, artikel 3.3 lid 4), met het einde van de bedenktijd ervoor. Zonder categorie alleen openbaar op verzoek. Gelijk aan de demo over e-mailarchivering.
+
 ## Versie 33 · 19-10-2026
 - Zakelijk of persoonlijk herzien, gelijk aan de demo over e-mailarchivering. Zolang een stuk concept is (of een bericht niet verzonden), wijzig je je keuze vrij. De tien dagen bedenktijd gaan in bij vaststellen, bij verzenden of, voor het rekenblad, bij het vastleggen van de metagegevens.
 - Binnen de bedenktijd toont het veld tot wanneer je kunt herzien. Daarna kan persoonlijk maken alleen op verzoek, bij de informatiebeheerder; zakelijk maken kan altijd. Met de demoknop Tien dagen later zie je het verschil.
