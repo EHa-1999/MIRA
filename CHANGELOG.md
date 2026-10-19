@@ -2,6 +2,10 @@
 
 Het versienummer staat in `VERSION`. Bij elke nieuwe versie: nummer ophogen, hier een regel toevoegen, `python3 build.py` draaien.
 
+## Versie 33 · 19-10-2026
+- Zakelijk of persoonlijk herzien, gelijk aan de demo over e-mailarchivering. Zolang een stuk concept is (of een bericht niet verzonden), wijzig je je keuze vrij. De tien dagen bedenktijd gaan in bij vaststellen, bij verzenden of, voor het rekenblad, bij het vastleggen van de metagegevens.
+- Binnen de bedenktijd toont het veld tot wanneer je kunt herzien. Daarna kan persoonlijk maken alleen op verzoek, bij de informatiebeheerder; zakelijk maken kan altijd. Met de demoknop Tien dagen later zie je het verschil.
+
 ## Versie 32 · 19-10-2026
 - Metadateren vanuit Noor, die het stuk heeft aangemaakt. Velden die zij als auteur en eigenaar mag bepalen, zijn nu aan te passen; alleen wat het platform afleidt (identificatie, aggregatieniveau, archiefvormer, auteur, waardering) blijft vast.
 - Zakelijk of persoonlijk kies je zelf, met een voorstel. Persoonlijk kan niet zolang het stuk aan een zaak of dossier hangt. Bij persoonlijk vallen de archiefvelden weg.

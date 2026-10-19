@@ -310,6 +310,8 @@ h1,h2,h3,h4,p{margin:0}
 .m-toeg,.r-toeg{--mc:var(--violet);--ms:var(--violet-soft)}.m-anon,.r-anon{--mc:var(--fg);--ms:color-mix(in srgb,var(--fg) 9%,var(--surface))}
 .m-clas,.r-clas{--mc:var(--amber);--ms:var(--amber-soft)}.m-waar,.r-waar{--mc:var(--green);--ms:var(--green-soft)}
 .selhint{display:flex;gap:8px;align-items:flex-start;padding:8px 10px;border:1px dashed var(--mc);border-radius:8px;background:var(--surface);font-size:12.5px;color:var(--muted)}.selhint b{display:block;color:var(--fg);font-weight:600}.selhint svg{flex:none;color:var(--mc);margin-top:2px}
+.kdl{display:inline-flex;gap:5px;align-items:center;color:var(--fg)}.kdl .tl{width:14px;height:14px;color:var(--accent)}
+.seg button:disabled{opacity:.45;cursor:not-allowed}
 .lkw{position:relative}
 .lkl{position:absolute;left:0;right:0;top:calc(100% + 3px);z-index:6;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);padding:4px;display:flex;flex-direction:column;gap:2px;max-height:260px;overflow:auto;list-style:none;margin:0}
 .lkl li[role="option"]{display:grid;gap:1px;padding:6px 8px;border-radius:6px;cursor:pointer;font-size:12.5px}.lkl li b{font-weight:500}.lkl li small{color:var(--muted);font-size:11.5px}.lkl .mono{font-family:var(--mono);font-size:11px}
@@ -859,7 +861,7 @@ var TRAP={1:'Ingesloten kopie zonder herkomst',2:'Kopie met vastgelegde herkomst
 var CLS={raad:{lab:'Besluitvorming gemeenteraad',waard:'Blijvend te bewaren',jaren:null},onderb:{lab:'Onderbouwing bij besluitvorming',waard:'Blijvend te bewaren',jaren:null},beleid:{lab:'Beleidsvoorbereiding',waard:'Te vernietigen na 10 jaar',jaren:10}};
 
 var S,D0={tekst:1,rekenblad:1,presentatie:1,mail:1};
-function mk(naam,id,cls){return{naam:naam,naam0:naam,id:id,naamOk:false,cls:cls,cls0:cls,clsOk:false,tref:[],wzd:{},aard:null,eig:null,zaak:'',doss:[],bep:null}}
+function mk(naam,id,cls){return{naam:naam,naam0:naam,id:id,naamOk:false,cls:cls,cls0:cls,clsOk:false,tref:[],wzd:{},aard:null,eig:null,zaak:'',doss:[],bep:null,since:null,after:false,req:false}}
 var MZAKEN=[['Z-2026-01837','Verklaring van geen bedenkingen zonnepark De Hoge Weide','Omgevingsvergunning','In behandeling'],
  ['Z-2026-01902','Subsidieaanvraag zonnepark De Hoge Weide','Subsidie','Ontvangen'],
  ['Z-2026-00412','Partiële herziening bestemmingsplan buitengebied','Bestemmingsplan','In behandeling'],
@@ -874,6 +876,17 @@ function mdos(nr){return MDOSS.filter(function(r){return r[0]===nr})[0]}
 function auteur(){return me().split(', ')[0]}
 function locDos(t){t=t||S.type;if(t==='mail')return null;var x=SVN[D(t).loc||'zp'];return x&&x.k==='dos'?x.nr:null}
 function allDoss(t){var l=locDos(t),d=D(t).meta.doss.slice();if(l&&d.indexOf(l)<0)d.unshift(l);return d}
+function addDays(d,n){var a=d.split('-'),x=new Date(+a[2],+a[1]-1,+a[0]+n);return ('0'+x.getDate()).slice(-2)+'-'+('0'+(x.getMonth()+1)).slice(-2)+'-'+x.getFullYear()}
+function kStartWhen(t){return t==='mail'?'bij verzenden':t==='rekenblad'?'bij het vastleggen van de metagegevens':'bij vaststellen'}
+function kLocked(t){var m=D(t).meta;return !!(m.since&&m.after)}
+function aardHint(t,mail){var m=D(t).meta,o=[];
+  if(!m.aard)o.push('<span>Voorstel: zakelijk.</span> <span>'+(mail?'Het bericht gaat over een lopende zaak.':'Het stuk is gemaakt met het sjabloon Raadsvoorstel.')+'</span> <span>Jij kiest; jij bent daarvoor verantwoordelijk.</span>');
+  else if(m.aard==='persoonlijk')o.push(mail?'<span>Persoonlijk: na verzending in de map Persoonlijk, versleuteld met je eigen sleutel en buiten het zoekbereik voor de Woo.</span>':'<span>Persoonlijk: het stuk hoort op je persoonlijke schijf. Het valt buiten het archief en buiten de Woo.</span>');
+  if(m.aard&&!m.since)o.push('<span>Zolang '+(mail?'het bericht niet is verzonden':'het stuk een concept is')+', kun je je keuze vrij wijzigen.</span> <span>De tien dagen bedenktijd gaan in '+kStartWhen(t)+'.</span>');
+  else if(m.since&&!m.after)o.push('<span class="kdl">'+tl('clock')+'<span><span>Herzien kan tot</span> <span data-notr>'+addDays(m.since,10)+'</span>.</span></span> <button class="link" data-act="mafter">Demo: tien dagen later</button>');
+  else if(m.since&&m.after)o.push(m.aard==='zakelijk'?(m.req?'<span>Verzoek ingediend. De informatiebeheerder beslist, met een tweede beoordelaar.</span>':'<span>De bedenktijd is voorbij. Persoonlijk maken kan alleen nog op verzoek, bij de informatiebeheerder.</span> <button class="link" data-act="mreq">Verzoek indienen</button>'):'<span>De bedenktijd is voorbij. Zakelijk maken kan altijd: dan komt het stuk alsnog in het archief.</span>');
+  if(m.since)o.push('<button class="link" data-act="mbefore"'+(m.after?'':' hidden')+'>Demo: terug naar vandaag</button>');
+  return o.length?[o.join(' ')]:null}
 function persBlock(t){var m=D(t).meta;return m.zaak||allDoss(t).length?'link':''}
 function mailDoc(){return{status:'concept',achteraf:false,cc:[],keuze:{rv:null,rb:null},comp:{
   rv:{naam:'Bijlage Raadsvoorstel',ico:'doc',kind:'att',doc:'tekst',in:true},
@@ -1203,9 +1216,9 @@ function fld(f,control,hint,kind){
 function metaHtml(){
   var m=D().meta,r=restrictions(S.type),dirty=!m.aard||!m.naamOk||!m.clsOk,mail=S.type==='mail';
   return '<div class="form">'+
-  fld('aard','<div class="seg" role="group" id="f-aard" aria-label="Zakelijk of persoonlijk">'+[['zakelijk','Zakelijk'],['persoonlijk','Persoonlijk']].map(function(b){return '<button data-act="maard" data-v="'+b[0]+'" aria-pressed="'+(m.aard===b[0])+'">'+b[1]+'</button>'}).join('')+'</div>',
-     m.aard==='persoonlijk'?[mail?'Persoonlijk: na verzending in de map Persoonlijk, versleuteld met je eigen sleutel en buiten het zoekbereik voor de Woo.':'Persoonlijk: het stuk hoort op je persoonlijke schijf. Het valt buiten het archief en buiten de Woo.']:m.aard?null:['<span>Voorstel: zakelijk.</span> <span>'+(mail?'Het bericht gaat over een lopende zaak.':'Het stuk is gemaakt met het sjabloon Raadsvoorstel.')+'</span> <span>Jij kiest; jij bent daarvoor verantwoordelijk.</span>'],m.aard?'gekozen':null)+
-  (mail?'<details class="mrules"><summary>Eigen regels voor e-mail</summary><ul><li>Na ontvangst heb je tien dagen bedenktijd. Doe je niets, dan wordt een bericht zakelijk.</li><li>Persoonlijk betekent: in de map Persoonlijk, versleuteld met je eigen sleutel en buiten het zoekbereik voor de Woo.</li><li>Binnen de bedenktijd kun je zakelijk nog terugzetten. Daarna alleen op verzoek, bij de informatiebeheerder.</li><li>Gekoppeld aan een zaak of dossier, of onder een lopend Woo-verzoek: niet persoonlijk.</li><li>Met een afwezigheidsbericht aan staat de bedenktijd stil.</li><li>Filters mogen een bericht niet naar Persoonlijk verplaatsen.</li></ul></details>':'')+
+  fld('aard','<div class="seg" role="group" id="f-aard" aria-label="Zakelijk of persoonlijk">'+[['zakelijk','Zakelijk'],['persoonlijk','Persoonlijk']].map(function(b){var dis=b[0]==='persoonlijk'&&m.aard==='zakelijk'&&kLocked(S.type);return '<button data-act="maard" data-v="'+b[0]+'" aria-pressed="'+(m.aard===b[0])+'"'+(dis?' disabled title="Alleen op verzoek, bij de informatiebeheerder"':'')+'>'+b[1]+'</button>'}).join('')+'</div>',
+     aardHint(S.type,mail),m.aard?'gekozen':null)+
+  (mail?'<details class="mrules"><summary>Eigen regels voor e-mail</summary><ul><li>Tien dagen bedenktijd: na ontvangst, of voor een eigen bericht na verzending. Doe je niets bij een ontvangen bericht, dan wordt het zakelijk.</li><li>Binnen de bedenktijd kun je je keuze herzien, in beide richtingen. Persoonlijk terug naar zakelijk kan altijd.</li><li>Persoonlijk betekent: in de map Persoonlijk, versleuteld met je eigen sleutel en buiten het zoekbereik voor de Woo.</li><li>Binnen de bedenktijd kun je zakelijk nog terugzetten. Daarna alleen op verzoek, bij de informatiebeheerder.</li><li>Gekoppeld aan een zaak of dossier, of onder een lopend Woo-verzoek: niet persoonlijk.</li><li>Met een afwezigheidsbericht aan staat de bedenktijd stil.</li><li>Filters mogen een bericht niet naar Persoonlijk verplaatsen.</li></ul></details>':'')+
   fld('id','<div class="inp derived" id="f-id" data-notr style="font-family:var(--mono);font-size:12px">'+m.id+'</div>')+
   fld('naam','<input class="inp" id="f-naam" data-in="naam"'+(m.naam===m.naam0?' data-trv':'')+' value="'+esc(m.naam)+'">',m.naamOk?null:[mail?'Voorgesteld uit het onderwerp. Je kunt het aanpassen.':'Voorgesteld uit de titel. Je kunt het aanpassen.'],m.naamOk?'bevestigd':null)+
   fld('aut','<div class="inp derived" id="f-aut" data-notr>'+esc(auteur())+'</div>',['Wie het stuk heeft aangemaakt. Volgt uit de aanmelding.'])+
@@ -2227,7 +2240,7 @@ var TI={
   flag:'M4 13.5v-11M4 3h8l-2 2.5 2 2.5H4',props:'M3 4.5h10M3 8h10M3 11.5h10M6 3v3M10 6.5v3M5 10v3',nav:'M8 2.5l1.6 3.9 3.9 1.6-3.9 1.6L8 13.5 6.4 9.6 2.500 8l3.900-1.600z',gallery:'M2.500 2.500h4.500v4.500H2.500zM9 2.500h4.500v4.500H9zM2.500 9h4.500v4.500H2.500zM9 9h4.500v4.500H9z'
 };
 TI.tag='M2.5 2.5h5l6 6-5 5-6-6zM5.4 5.4h.1';TI.acc='M8 4.2a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM3 6h10M8 6v3.5M8 9.5l-2.5 4M8 9.5l2.5 4';TI.redact='M2.5 4h11M2.5 8h4M9 6.5h4.5v3H9zM2.5 12h8';TI.seal='M8 9.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM6 9l-1 4.5 3-1.5 3 1.5-1-4.500';TI.flow='M2.5 2.500h4v3h-4zM9.500 10.500h4v3h-4zM4.500 5.500v6.500h5';
-TI.book='M3.5 2.5h8a1 1 0 0 1 1 1v10h-8a1 1 0 0 1-1-1zM8 7.2a1.4 1.4 0 1 0 0-2.8 1.4 1.4 0 0 0 0 2.8zM5.8 10.8c.4-1.3 1.2-2 2.2-2s1.8.7 2.2 2';TI.home='M2.5 7.5L8 3l5.5 4.5V13h-4V9.5h-3V13h-4z';TI.layers='M8 2.5l5.5 3-5.5 3-5.5-3zM2.5 8.5l5.5 3 5.5-3M2.5 11l5.5 3 5.5-3';TI.help='M8 13.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM6.4 6.6a1.6 1.6 0 1 1 2.4 1.4c-.5.3-.8.7-.8 1.2M8 11.2h.1';
+TI.book='M3.5 2.5h8a1 1 0 0 1 1 1v10h-8a1 1 0 0 1-1-1zM8 7.2a1.4 1.4 0 1 0 0-2.8 1.4 1.4 0 0 0 0 2.8zM5.8 10.8c.4-1.3 1.2-2 2.2-2s1.8.7 2.2 2';TI.clock='M8 13.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM8 5v3.2l2 1.3';TI.home='M2.5 7.5L8 3l5.5 4.5V13h-4V9.5h-3V13h-4z';TI.layers='M8 2.5l5.5 3-5.5 3-5.5-3zM2.5 8.5l5.5 3 5.5-3M2.5 11l5.5 3 5.5-3';TI.help='M8 13.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM6.4 6.6a1.6 1.6 0 1 1 2.4 1.4c-.5.3-.8.7-.8 1.2M8 11.2h.1';
 var OAI={gab:'book',ovz:'home',ond:'layers',help:'help',meta:'tag',toeg:'acc',anon:'redact',clas:'flag',waar:'seal',flow:'flow'};
 var TX={b:'B',i:'I',u:'U',col:'A',eur:'€',pct:'%',sum:'Σ',abc:'abc',dec:',0'};
 function tl(k,cls){return '<span class="tl'+(cls?' '+cls:'')+'" data-notr>'+(TI[k]?'<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="'+TI[k]+'"/></svg>':'<span class="tx t-'+k+'">'+TX[k]+'</span>')+'</span>'}
@@ -2489,6 +2502,7 @@ function checkDlg(){
 }
 function doVast(){
   var lv=L(),d0=D(),r=document.querySelector('input[name="v-conf"]:checked'),cb=$('v-cls'),id=d0.meta.id.slice(0,8);
+  if(!d0.meta.since){d0.meta.since=TODAY;hood('Register: bedenktijd begint {object: '+id+'} · herzien kan tot '+addDays(TODAY,10))}
   if(cb&&cb.checked){d0.meta.clsOk=true;hood('gebeurtenis: metagegevens gewijzigd · classificatie besloten door N. Bakker')}
   if(r)d0.conflict=r.value;
   d0.status='vastgesteld';d0.versie='1.0';closeDlg();
@@ -2520,7 +2534,7 @@ function openSend(){
 function doSend(mode){
   var m=D('mail'),lv=Lt('mail');
   if(mode==='dlg'){var a=document.querySelector('input[name="s-rv"]:checked'),b=document.querySelector('input[name="s-rb"]:checked');m.keuze.rv=a?a.value:null;m.keuze.rb=b?b.value:null;closeDlg()}
-  m.status='verzonden';m.rbv=S.latest.opbrengst;m.achteraf=mode==='achteraf';
+  m.status='verzonden';if(!m.meta.since){m.meta.since=TODAY;hood('Register: bedenktijd begint {object: '+m.meta.id.slice(0,8)+'} · herzien kan tot '+addDays(TODAY,10))}m.rbv=S.latest.opbrengst;m.achteraf=mode==='achteraf';
   if(lv<3){hood('SMTP: bericht verzonden met 2 bijlagen (1,8 MB) · verder niets vastgelegd');toast('Verzonden. Er is niets vastgelegd.')}
   else{
     if(mode==='achteraf')hood('adapter: verzenden niet te onderscheppen · bericht waargenomen in Verzonden items');
@@ -2535,7 +2549,10 @@ function doSend(mode){
 
 /* ---------- handelingen ---------- */
 var ACT={
-  maard:function(d){var m=D().meta,v=d.v;if(v==='persoonlijk'&&persBlock()){toast(S.type==='mail'?'Dit bericht is gekoppeld aan een zaak of dossier. Ontkoppel eerst; persoonlijk kan dan niet.':(locDos()?'Het stuk staat in de map van een dossier. Sla het eerst op buiten het dossier en ontkoppel zaak en dossiers.':'Het stuk is gekoppeld aan een zaak of dossier. Ontkoppel eerst.'));return}
+  mafter:function(){D().meta.after=true;hood('Demo: tien dagen later · bedenktijd voorbij · Object Lock op de vastgelegde versie');render()},
+  mbefore:function(){D().meta.after=false;render()},
+  mreq:function(){var m=D().meta;m.req=true;hood('POST /register/requests → 201 · verzoek aan de informatiebeheerder {object: '+m.id.slice(0,8)+'}');toast('Verzoek ingediend bij de informatiebeheerder.');render()},
+  maard:function(d){var m=D().meta,v=d.v;if(v===m.aard)return;if(v==='persoonlijk'&&m.aard==='zakelijk'&&kLocked(S.type)){toast('De bedenktijd is voorbij. Persoonlijk maken kan alleen nog op verzoek, bij de informatiebeheerder.');return}if(v==='persoonlijk'&&persBlock()){toast(S.type==='mail'?'Dit bericht is gekoppeld aan een zaak of dossier. Ontkoppel eerst; persoonlijk kan dan niet.':(locDos()?'Het stuk staat in de map van een dossier. Sla het eerst op buiten het dossier en ontkoppel zaak en dossiers.':'Het stuk is gekoppeld aan een zaak of dossier. Ontkoppel eerst.'));return}
     m.aard=v;hood('Metagegevens vastleggen {object: '+m.id.slice(0,8)+', aard: '+v+'} → '+(v==='persoonlijk'?'buiten het archief en het Woo-zoekbereik':'zakelijk, bewaartermijn volgt uit de classificatie'));render()},
   mlkpick:function(d){var m=D().meta,k=d.k,v=d.v;if(m.aard==='persoonlijk')m.aard='zakelijk';
     if(k==='zaak'){m.zaak=v;hood('POST /zaken/api/v1/zaakinformatieobjecten → 201 · kenmerk in het register {zaak: '+v+'} · het zaaksysteem blijft leidend');toast('Gekoppeld aan zaak · '+v)}
@@ -2660,7 +2677,7 @@ var ACT={
   tref:function(d){D().meta.tref.push(d.t);render()},
   untref:function(d){D().meta.tref.splice(+d.i,1);render()},
   save:function(){
-    var m=D().meta,n=0;if(!m.aard){toast('Kies eerst of het stuk zakelijk of persoonlijk is.');var a=$('f-aard');if(a)a.scrollIntoView({block:'center'});return}if(!m.naamOk){m.naamOk=true;n++}if(!m.clsOk){m.clsOk=true;n++}
+    var m=D().meta,n=0;if(S.type==='rekenblad'&&m.aard&&!m.since){m.since=TODAY;hood('Register: bedenktijd begint {object: '+m.id.slice(0,8)+'} · herzien kan tot '+addDays(TODAY,10))}if(!m.aard){toast('Kies eerst of het stuk zakelijk of persoonlijk is.');var a=$('f-aard');if(a)a.scrollIntoView({block:'center'});return}if(!m.naamOk){m.naamOk=true;n++}if(!m.clsOk){m.clsOk=true;n++}
     hood('gebeurtenis: metagegevens gewijzigd · '+(n+1)+' beweringen toegevoegd, voorstellen blijven bewaard');
     if(S.type==='mail')hood('beschrijving alleen in het platform: een e-mailbericht heeft geen drager voor metagegevens');
     else if(FAM[S.env].segment)hood('adapter: standaardeigenschappen, eigen eigenschappen en MDTO-profiel bijgewerkt in het geopende document');
