@@ -716,6 +716,10 @@ ol.sq p{margin:3px 0 0;font-size:13px;color:var(--fg);max-width:none}
 .tech{flex:1;min-height:0;overflow:auto;padding:16px;display:grid;gap:14px;align-content:start;grid-auto-rows:max-content}
 .tgrp{border:1px solid var(--line);border-radius:10px;background:var(--surface);overflow:hidden;margin-top:12px}
 .tech>.tgrp,.gtwo>.tgrp{margin-top:0}
+.th3{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:6px 0 -4px}
+.tkv{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px 18px;padding:12px;font-size:13px}.tkv>div{display:grid;gap:2px;align-content:start}.tkv b{font-weight:600}.tkv span{color:var(--muted)}
+.tt code{font-family:var(--mono);font-size:11.5px;white-space:nowrap}
+#gp-func h2{font-size:15px;margin:10px 0 4px}#gp-func p{margin:0;color:var(--muted)}
 .tgrp>header{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;padding:9px 12px;background:var(--surface2);border-bottom:1px solid var(--line)}
 .tgrp>header b{font-weight:600}
 .tgrp>header>span:not(.pill){font-size:12px;color:var(--muted);flex:1 1 260px}
@@ -2080,19 +2084,95 @@ var FMT=[
  ['PDF/A, de publicatievorm','gelakt vlak met vervangende tekst','in de metagegevens van het bestand'],
  ['E-mail en platte tekst','geen drager in het bestand','alleen in het platform']
 ];
-function techHtml(){
+function funcHtml(){
   var f=S.tg||'all',n=function(k){return TF.filter(function(r){return r[0]===k}).length};
-  return '<div class="tech"><div><h2>Wat vraagt elke functie, en van wie</h2><p>Concept. De indeling volgt Deel II en de aannames in deze demo, en is niet met leveranciers getoetst. Bij elke functie staat de stap uit het groeipad waarin zij landt.</p></div>'+
+  return '<div id="gp-func"><h2>Wat vraagt elke functie, en van wie</h2><p>Concept. De indeling volgt Deel II en de aannames in deze demo, en is niet met leveranciers getoetst. Bij elke functie staat de stap waarin zij landt.</p></div>'+
     '<div class="chips" role="group" aria-label="Groep"><button data-act="tgsel" data-v="all" aria-pressed="'+(f==='all')+'">Alles<code>'+TF.length+'</code></button>'+TG.map(function(g){return '<button data-act="tgsel" data-v="'+g[0]+'" aria-pressed="'+(f===g[0])+'">'+g[1]+'<code>'+n(g[0])+'</code></button>'}).join('')+'</div>'+
     TG.filter(function(g){return f==='all'||f===g[0]}).map(function(g){return '<section class="tgrp"><header><span class="pill '+g[3]+'">'+n(g[0])+'</span><b>'+g[1]+'</b><span>'+g[2]+'</span></header>'+
       '<div class="trow hd"><div>Functie in de demo</div><div>Waar het op steunt</div><div>Let op</div></div>'+
       TF.filter(function(r){return r[0]===g[0]}).map(function(r){return '<div class="trow"><div class="fn">'+r[1]+' <span class="pill p-grey">stap '+r[4]+'</span></div><div>'+r[2]+'</div><div class="nt">'+r[3]+'</div></div>'}).join('')+'</section>'}).join('')+
+    '';
+}
+
+/* ---------- weergave: techniek (technische opbouw) ---------- */
+var TCOMP=[
+ {h:'Werkomgeving en adapters',d:'Per kantoorpakket of mailomgeving één dunne adapter. Alle adapters laden hetzelfde paneel en spreken hetzelfde contract.',r:[
+  ['Adapter Word, Excel en PowerPoint','Office-webinvoegtoepassing: Office.js, taakvenster in HTML en TypeScript, manifest','In het kantoorpakket; code van een webserver van de gemeente','Vast'],
+  ['Adapter LibreOffice','Extensie (.oxt) via UNO, in Python of Java; paneel via de zijbalk','Op de werkplek','Vast'],
+  ['Adapter Collabora Online','WOPI-koppeling met de bestandsopslag en de PostMessage-API van de editor; paneel als iframe naast de editor','In de browser; de Collabora-server draait bij de gemeente','Vast'],
+  ['Adapter Outlook (klassiek)','COM-invoegtoepassing in .NET, paneel in WebView2','Op een Windows-werkplek','Vast'],
+  ['Adapter Thunderbird','WebExtension met de MailExtension-API\'s','Op de werkplek','Vast'],
+  ['Paneel','Eén webcomponent in HTML, CSS en TypeScript, in elke adapter dezelfde; WCAG 2.1 AA, vertaalbaar','In het venster van de adapter','Vast']]},
+ {h:'Assistentkern',d:'Draait in het paneel en kent alleen het contract. Zij bewaart niets tussen twee aanroepen en heeft geen sleutels.',r:[
+  ['Kern en coördinatie','TypeScript-bibliotheek zonder toestand; bepaalt welke bewerking wordt aangeroepen','In het paneel','Vast'],
+  ['Zes modules','Insteekmodules van de kern, elk met een eigen versie: metadateren, toegankelijkheid, anonimiseren, classificeren, waarmerken, workflow','In het paneel','Vast'],
+  ['Beoordelingsweergave','Aparte webtoepassing; PDF-weergave met PDF.js','In de browser','Vast']]},
+ {h:'Integratielaag',d:'Aan de serverkant, dun en zonder eigen gegevens. Hier staan de geheimen, niet op de werkplek.',r:[
+  ['Backend-for-frontend','Dunne dienst achter de API-gateway; zonder toestand, horizontaal te schalen','Kubernetes-cluster van de gemeente (Haven)','Vast'],
+  ['Aanmelding','OpenID Connect met PKCE via de identiteitsvoorziening van de gemeente, bijvoorbeeld Keycloak; sessie als cookie in de BFF','Kubernetes-cluster','Kandidaat'],
+  ['Doorgeven','Token exchange (RFC 8693) naar een token per platformdienst, met beperkte rechten en korte geldigheid','Kubernetes-cluster','Vast'],
+  ['Geheimen','OpenBao: clientgeheimen en API-sleutels','Kubernetes-cluster','Kandidaat']]},
+ {h:'XENA-platform',d:'Het werk en de vastlegging gebeuren hier. De componenten zijn dezelfde als voor de netwerkschijven en de e-mailarchivering.',r:[
+  ['Register','Objecten, versies, bindingen en beweringen; elke vastlegging een gebeurtenis; PostgreSQL','Kubernetes-cluster','Vast'],
+  ['Objectopslag','S3-compatibel, met versiebeheer en Object Lock, bijvoorbeeld MinIO','Datacenter van de gemeente','Kandidaat'],
+  ['Gebeurtenissen','Kafka; afnemers lezen onafhankelijk van elkaar','Kubernetes-cluster','Vast'],
+  ['Snelle, lezende diensten','Toegankelijkheid beoordelen, persoonsgegevens signaleren (taalmodel voor namen, patronen voor nummers), beleid evalueren; synchroon, alleen lezen','Kubernetes-cluster, eigen pool','Vast'],
+  ['Zwaar werk','Lakken, omzetten naar PDF/A-2b, samenstellen, waarmerken; asynchroon via een opdracht en een gebeurtenis','Kubernetes-cluster, eigen pool','Vast'],
+  ['Sleutelbeheer','OpenBao Transit: een sleutel per object (envelopversleuteling), persoonlijke sleutels apart','Kubernetes-cluster','Kandidaat'],
+  ['Waarmerk','Gekwalificeerd elektronisch zegel via een vertrouwensdienstverlener (handtekening op afstand, CSC-API); tijdstempel volgens RFC 3161','Buiten de gemeente, bij de vertrouwensdienstverlener','Kandidaat'],
+  ['Bestandstoegang','Nextcloud Files (WebDAV)','Kubernetes-cluster','Vast'],
+  ['Zoekindex','OpenSearch, volgt het register','Kubernetes-cluster','Vast']]}];
+var TOPS=[
+ ['documentzijde','vermogens()','basis','Welke vermogens deze werkomgeving heeft. Wordt bij het openen gevraagd.'],
+ ['documentzijde','inhoud()','basis','Het hele stuk, met formaat en de versie waarop het gebaseerd is.'],
+ ['documentzijde','vervang(inhoud)','basis','Het hele stuk vervangen. Werkt overal; de werkomgeving herlaadt het stuk.'],
+ ['documentzijde','segment(anker) en vervangSegment(anker, inhoud)','optioneel','Een deel lezen of vervangen, zonder te herladen.'],
+ ['documentzijde','zichtbaarBereik() en cursor()','optioneel','Wat in beeld is en waar de cursor staat, zodat het paneel kan meebewegen.'],
+ ['documentzijde','naarAnker(anker)','optioneel','Naar een plek in het stuk springen.'],
+ ['documentzijde','schrijfBeschrijving(eigenschappen)','optioneel','Metagegevens in het bestand zetten, als afdruk van het platform.'],
+ ['documentzijde','gebaar(soort)','optioneel','Opslaan als, verzenden of plakken aankondigen, zodat de assistent op het goede moment kan vragen.'],
+ ['paneelzijde','toon(tekst)','basis','Iets tonen. Ook een omgeving die alleen een melding kan tonen, voldoet.'],
+ ['paneelzijde','vraag(tekst, keuzes)','optioneel','Eén vraag op het juiste moment. Zonder dit vermogen blijft de vraag in het paneel staan.'],
+ ['paneelzijde','voortgang(tekst) en faal(reden, herhalenZinvol)','basis','Wat er gebeurt, en wat er misging.']];
+var TCONTRACT=[
+ ['Berichtvorm','JSON-RPC 2.0. Elke aanroep heeft een naam, parameters en een antwoord of een fout.'],
+ ['Transport per adapter','Office.js: een functieaanroep in hetzelfde venster. Collabora: PostMessage tussen editor en paneel. Outlook (klassiek): WebView2-berichten naar de COM-code. LibreOffice: de UNO-brug. Thunderbird: berichten tussen paneel en achtergrondscript.'],
+ ['Versiebeheer','Semantische versienummers. Bij het openen meldt de adapter de versie en de vermogens; de kern biedt alleen aan wat beide kennen.'],
+ ['Terugval','Ontbreekt een optioneel vermogen, dan valt de functie zichtbaar terug op de basis: hele stuk vervangen, vraag in het paneel, achteraf vastleggen.'],
+ ['Conformiteit','Een openbare, uitvoerbare toets. Een adapter die slaagt, voldoet aan het contract, zonder dat de leverancier zijn code hoeft te tonen.'],
+ ['Wat er niet in zit','Geen documenttypen, geen bedrijfsbegrippen als zaak of dossier, geen aanmelding en geen weergavetechniek.']];
+var TIF=[
+ ['Paneel','Integratielaag','HTTPS, REST met JSON','OIDC-sessie als cookie (SameSite, HttpOnly)','JSON'],
+ ['Integratielaag','Snelle, lezende diensten','HTTPS (REST of gRPC)','Token exchange, mTLS binnen het cluster','JSON of Protobuf'],
+ ['Integratielaag','Zwaar werk','Opdracht via REST, uitkomst als gebeurtenis via Kafka','Token per dienst','CloudEvents'],
+ ['Integratielaag','Register','HTTPS, REST','Token exchange','JSON'],
+ ['Kantoorpakket','Bestandstoegang','WebDAV','OIDC of app-wachtwoord','ODF, OOXML'],
+ ['Collabora Online','Bestandstoegang','WOPI','WOPI-toegangstoken per bestand','ODF, OOXML'],
+ ['Register','Zaaksysteem','ZGW Zaken API en Documenten API','JWT met client-id (ZGW)','JSON'],
+ ['Register','Publicatiedepot (TINA)','HTTPS, REST','Token per dienst','PDF/A-2b met metagegevens volgens DiWoo'],
+ ['Zwaar werk','Vertrouwensdienstverlener','CSC-API voor handtekening op afstand','OAuth 2.0','PAdES-zegel, tijdstempel RFC 3161'],
+ ['Platformdiensten','Sleutelbeheer','OpenBao Transit API','Kubernetes-serviceaccount','Versleutelde gegevenssleutels'],
+ ['Mailomgeving','E-mailarchief','IMAP, ManageSieve, CardDAV','OIDC of app-wachtwoord','EML, vCard']];
+function techHtml(){
+  var badge=function(v){return '<span class="pill '+(v==='Vast'?'p-green':'p-amber')+'">'+(v==='Vast'?'Uitgangspunt':'Kandidaat')+'</span>'};
+  return '<div class="tech"><div><h2>De technische opbouw</h2><p>Concept. Per laag de componenten, de technologie en waar ze draaien, en daarna het contract en de koppelingen. Uitgangspunt betekent: volgt uit de architectuur. Kandidaat betekent: een voorbeeld dat past, nog niet gekozen. Wat de functies vragen, staat onder Groeipad.</p></div>'+
+    '<h3 class="th3">Componenten en technologie</h3>'+
+    TCOMP.map(function(L){return '<section class="tgrp"><header><b>'+L.h+'</b><span>'+L.d+'</span></header><div class="tw"><table class="tt"><thead><tr><th>Component</th><th>Technologie</th><th>Draait</th><th></th></tr></thead><tbody>'+
+      L.r.map(function(r){return '<tr><td><b>'+r[0]+'</b></td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+badge(r[3])+'</td></tr>'}).join('')+'</tbody></table></div></section>'}).join('')+
+    '<h3 class="th3">Contract en interfaces</h3>'+
+    '<section class="tgrp"><header><b>Het contract tussen adapter en kern</b><span>Twee kanten: de documentzijde biedt de adapter aan, de paneelzijde gebruikt de kern om met de medewerker te praten.</span></header><div class="tw"><table class="tt"><thead><tr><th>Kant</th><th>Aanroep</th><th>Soort</th><th>Wat het doet</th></tr></thead><tbody>'+
+      TOPS.map(function(r){return '<tr><td>'+r[0]+'</td><td><code data-notr>'+esc(r[1])+'</code></td><td><span class="pill '+(r[2]==='basis'?'p-green':'p-grey')+'">'+r[2]+'</span></td><td>'+r[3]+'</td></tr>'}).join('')+'</tbody></table></div>'+
+      '<div class="tkv">'+TCONTRACT.map(function(r){return '<div><b>'+r[0]+'</b><span>'+r[1]+'</span></div>'}).join('')+'</div>'+
+      '<div style="padding:0 12px 12px"><pre class="wirepre" data-notr>'+esc(WIRE[0].m)+'</pre></div></section>'+
+    '<section class="tgrp"><header><b>Koppelingen</b><span>Van de werkplek tot de diensten buiten de gemeente. Geen enkele aanroep slaat de integratielaag over, behalve bestandstoegang en e-mail, die hun eigen standaard hebben.</span></header><div class="tw"><table class="tt"><thead><tr><th>Van</th><th>Naar</th><th>Protocol</th><th>Aanmelding</th><th>Formaat</th></tr></thead><tbody>'+
+      TIF.map(function(r){return '<tr><td><b>'+r[0]+'</b></td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td><td>'+r[4]+'</td></tr>'}).join('')+'</tbody></table></div></section>'+
     '<section class="tgrp"><header><b>Wat elke werkomgeving levert</b><span>Een momentopname, deels aanname. Juist hier breiden leveranciers hun koppelvlakken geregeld uit.</span></header><div class="tw"><table class="tt"><thead><tr><th>Vermogen</th><th>Word, Excel, PowerPoint</th><th>Collabora Online</th><th>LibreOffice</th><th>Mailomgeving (zie hieronder)</th></tr></thead><tbody>'+
       CAPS.map(function(r){return '<tr>'+r.map(function(c,i){return i?'<td>'+c+'</td>':'<td><b>'+c+'</b></td>'}).join('')+'</tr>'}).join('')+'</tbody></table></div></section>'+
     '<section class="tgrp"><header><b>Wat elke mailomgeving levert</b><span>Momentopname, deels aanname. Dezelfde tabel staat in de demo over e-mailarchivering.</span></header><div class="tw"><table class="tt"><thead><tr><th>Mailomgeving</th><th>Postbus</th><th>Paneel</th><th>Controle bij verzenden</th><th>Labels</th><th>Adresboek</th></tr></thead><tbody>'+
       MENV.map(function(r,i){return '<tr'+(i===3?' class="dim"':'')+'>'+r.map(function(c,j){return j?'<td>'+c+'</td>':'<td><b>'+c+'</b></td>'}).join('')+'</tr>'}).join('')+'</tbody></table></div><p class="hint" style="padding:0 12px 10px">Met een Exchange-postbus werkt de webinvoegtoepassing in elke Outlook, maar dan staat de mail bij Microsoft. Met de postbus in het e-mailarchief van XENA blijft voor Outlook alleen de COM-invoegtoepassing in Outlook (klassiek) over.</p></section>'+
     '<section class="tgrp"><header><b>Waar het in het bestand staat</b><span>Een gemaskeerde passage en de beschrijving van het stuk bestaan één keer, in het platform. Elk formaat draagt daarvan een afdruk.</span></header><div class="tw"><table class="tt"><thead><tr><th>Formaat</th><th>Plek van een passage</th><th>Beschrijving van het stuk</th></tr></thead><tbody>'+
-      FMT.map(function(r){return '<tr><td><b>'+r[0]+'</b></td><td>'+r[1]+'</td><td>'+r[2]+'</td></tr>'}).join('')+'</tbody></table></div><p class="hint" style="padding:0 12px 10px">In de werkversie staat ook de versleutelde waarde van een gemaskeerde passage. In de gepubliceerde versie staan alleen de aanduiding, een grove soort, de weigeringsgrond en de datum.</p></section></div>';
+      FMT.map(function(r){return '<tr><td><b>'+r[0]+'</b></td><td>'+r[1]+'</td><td>'+r[2]+'</td></tr>'}).join('')+'</tbody></table></div><p class="hint" style="padding:0 12px 10px">In de werkversie staat ook de versleutelde waarde van een gemaskeerde passage. In de gepubliceerde versie staan alleen de aanduiding, een grove soort, de weigeringsgrond en de datum.</p></section>';
+    '</div>';
 }
 
 /* ---------- weergave: groeipad ---------- */
@@ -2110,7 +2190,7 @@ function groeiHtml(){
     '<div class="gband"><div style="grid-column:1/4">Zelf te doen: vraagt niets van de leveranciers</div><div class="later" style="grid-column:4/5">Samen met de markt</div></div>'+
     '<div class="gsteps">'+GP.map(function(x,k){var i=k+1;return '<section class="gstep'+(x.out?' out':'')+'"><div class="gh"><div class="gnum">stap '+i+'</div><h3>'+x.t+'</h3><div class="when">Tijdvak: '+x.tv+'</div></div>'+
       '<dl><div><dt>Wat de medewerker merkt</dt><dd>'+x.see+'</dd></div><div><dt>Wat het platform moet kunnen</dt><dd>'+x.pf+'</dd></div><div><dt>Wat het van de leveranciers vraagt</dt><dd>'+x.mk+'</dd></div></dl>'+
-      '<div class="tags">'+tags(i)+'</div><details class="gfn"><summary>'+fs(i).length+' functies uit Techniek</summary><ul>'+fs(i).map(function(r){return '<li>'+r[1]+'</li>'}).join('')+'</ul></details>'+
+      '<div class="tags">'+tags(i)+'</div><details class="gfn"><summary>'+fs(i).length+' functies</summary><ul>'+fs(i).map(function(r){return '<li>'+r[1]+'</li>'}).join('')+'</ul></details>'+
       '<div class="gms"><span class="dia"></span><span>'+x.ms+'</span></div></section>'}).join('')+'</div>'+
     '<section class="tgrp"><header><b>De ladder van zes trappen</b><span>Wat een onderdeel in een stuk kan. De schakelaar Tijdvak in de demo loopt langs deze ladder.</span></header><div class="tw"><table class="tt"><thead><tr><th>Trap</th><th>Wat het onderdeel doet</th><th>Haalbaar</th></tr></thead><tbody>'+
       [1,2,3,4,5,6].map(function(i){return '<tr><td><b>'+i+'</b></td><td>'+TRAP[i]+'</td><td>'+TRAPH[i-1]+'</td></tr>'}).join('')+'</tbody></table></div></section>'+
@@ -2126,7 +2206,7 @@ function groeiHtml(){
       '<li><b>Bewaargebaren aankondigen,</b> in het bijzonder Opslaan als.</li>'+
       '<li><b>Melden wat in beeld is,</b> zodat een paneel kan meebewegen.</li>'+
       '<li><b>Markering in de tekst</b> die in beide formaatfamilies bewaard blijft.</li></ul></div></section></div>'+
-    '<section class="tgrp"><header><b>Verhouding tot Common Ground</b></header><div><p style="margin:0">De assistent voegt geen principe toe. Zij past “gegevens bij de bron” toe op het document, een domein dat tot nu toe buiten beschouwing bleef. Het zaaksysteem blijft het systeem van registratie; de assistent draagt over en registreert niet zelf.</p></div></section></div>';
+    '<section class="tgrp"><header><b>Verhouding tot Common Ground</b></header><div><p style="margin:0">De assistent voegt geen principe toe. Zij past “gegevens bij de bron” toe op het document, een domein dat tot nu toe buiten beschouwing bleef. Het zaaksysteem blijft het systeem van registratie; de assistent draagt over en registreert niet zelf.</p></div></section>'+funcHtml()+'</div>';
 }
 /* ---------- weergave: help ---------- */
 var HVIEWS=[
@@ -2135,8 +2215,8 @@ var HVIEWS=[
  ['presentatie','Presentatie','Drie dia\'s met sprekersnotities. Het paneel volgt de dia die in beeld is.'],
  ['mail','E-mail','Een bericht met twee bijlagen. Bij het verzenden stelt de assistent één vraag per bijlage. Alleen hier heeft het paneel een adresboek.'],
  ['arch','Architectuur','De vier omgevingen, het contract ertussen en per handeling de stappen.'],
- ['tech','Techniek','Per functie wat zij vraagt en van wie: de werkomgeving, de leverancier of het platform.'],
- ['groei','Groeipad','In vier stappen invoeren, waarvan drie zonder op de markt te wachten.']
+ ['tech','Techniek','De technische opbouw: componenten en technologie per laag, het contract tussen adapter en kern, en de koppelingen.'],
+ ['groei','Groeipad','In vier stappen invoeren, waarvan drie zonder op de markt te wachten. Onderaan per functie wat zij vraagt en van wie.']
 ];
 var HROUTE=[
  'Open Tekst en klik op een omrand onderdeel in het document. In het paneel zie je de bron, de versie en de binding.',

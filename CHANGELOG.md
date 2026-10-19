@@ -2,6 +2,10 @@
 
 Het versienummer staat in `VERSION`. Bij elke nieuwe versie: nummer ophogen, hier een regel toevoegen, `python3 build.py` draaien.
 
+## Versie 35 · 19-10-2026
+- Techniek beschrijft nu de technische opbouw: per laag de componenten, de technologie en waar ze draaien (uitgangspunt of kandidaat), het contract tussen adapter en kern met alle aanroepen, berichtvorm, transport, versiebeheer en conformiteit, en een tabel van alle koppelingen met protocol, aanmelding en formaat. De tabellen met vermogens per werkomgeving, per mailomgeving en per bestandsformaat blijven.
+- Het overzicht van functies en wat ze vragen staat nu onder Groeipad, bij de stappen.
+
 ## Versie 34 · 19-10-2026
 - Woo-categorie in Metadateren: afgeleid uit het documenttype, zelf te kiezen, of overgenomen van de zaak of het dossier. Een zaak of dossier met een categorie gaat voor op de eigen keuze; die vervalt bij het koppelen.
 - Openbaar maken: met een categorie uiterlijk twee weken na vaststelling of verzending (Woo, artikel 3.3 lid 4), met het einde van de bedenktijd ervoor. Zonder categorie alleen openbaar op verzoek. Gelijk aan de demo over e-mailarchivering.
