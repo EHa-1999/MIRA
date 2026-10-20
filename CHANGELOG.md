@@ -2,6 +2,10 @@
 
 Het versienummer staat in `VERSION`. Bij elke nieuwe versie: nummer ophogen, hier een regel toevoegen, `python3 build.py` draaien.
 
+## Versie 36 · 21-10-2026
+- Architectuur toont naast de uitgaande stroom ook de inkomende: e-mail, chat en post of formulieren komen binnen via een vervangbare aanvoer en een brug naar Nextcloud, alleen tussen backendsystemen en niet via de werkplek. Gelijk aan de demo over e-mailarchivering.
+- Drie nieuwe handelingen, gegroepeerd als inkomend: e-mail ontvangen, chatbericht ontvangen, brief of formulier ontvangen. De stappen laten zien hoe een bericht wordt ontvangen, geregistreerd en opgeslagen.
+
 ## Versie 35 · 19-10-2026
 - Techniek beschrijft nu de technische opbouw: per laag de componenten, de technologie en waar ze draaien (uitgangspunt of kandidaat), het contract tussen adapter en kern met alle aanroepen, berichtvorm, transport, versiebeheer en conformiteit, en een tabel van alle koppelingen met protocol, aanmelding en formaat. De tabellen met vermogens per werkomgeving, per mailomgeving en per bestandsformaat blijven.
 - Het overzicht van functies en wat ze vragen staat nu onder Groeipad, bij de stappen.
