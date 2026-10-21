@@ -692,19 +692,6 @@ ol.wf code{font-family:var(--mono);font-size:10.5px;color:var(--muted)}
 /* architectuur, techniek, groeipad */
 .arch{flex:1;min-height:0;overflow:auto;padding:16px;display:grid;gap:20px;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);align-content:start}
 .arch h2,.tech h2{font-size:15px;margin:0 0 4px;font-weight:600}
-.xtop{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:stretch}
-.xcol{display:flex;flex-direction:column;min-width:0}
-.xtop>.xcol>.layer:last-child{flex:1}
-.xfill{flex:1;position:relative;min-height:8px}
-.xfill::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--line)}
-.xtop .boxes{grid-template-columns:minmax(0,1fr)}
-.xdir{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin:0 0 6px}
-.harrow{align-self:center;display:grid;justify-items:center;gap:2px;padding:0 8px;max-width:84px;text-align:center;font-size:11px;color:var(--muted)}
-.harrow b{font-size:20px;color:var(--accent);line-height:1}
-.xconn{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)}
-.xconn>div:nth-child(2){width:100px}
-.chgrp{display:grid;gap:4px;margin:0 0 8px}
-.chgrp>.pill{justify-self:start}
 .arch>div>p,.tech>div>p{margin:0 0 12px;color:var(--muted);max-width:70ch}
 .layer{border:1px solid var(--line);border-radius:10px;padding:10px 12px 12px;background:var(--surface2)}
 .layer.key{border-color:var(--accent);background:color-mix(in srgb,var(--accent-soft) 45%,var(--surface))}
@@ -766,11 +753,7 @@ ol.sq p{margin:3px 0 0;font-size:13px;color:var(--fg);max-width:none}
 .gtwo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .dlg.wide{max-width:760px}
 .wirepre{margin:0;background:var(--surface2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-family:var(--mono);font-size:11.5px;line-height:1.5;overflow-x:auto;white-space:pre}
-@media (max-width:1000px){.arch{grid-template-columns:minmax(0,1fr)}
-.xtop,.xconn{grid-template-columns:minmax(0,1fr)}
-.harrow{max-width:none;padding:6px 0}
-.harrow b{transform:rotate(90deg)}
-.xconn>div:nth-child(2){display:none}.gsteps,.gband{grid-template-columns:repeat(2,minmax(0,1fr))}.gband>div{grid-column:auto!important}}
+@media (max-width:1000px){.arch{grid-template-columns:minmax(0,1fr)}.gsteps,.gband{grid-template-columns:repeat(2,minmax(0,1fr))}.gband>div{grid-column:auto!important}}
 @media (max-width:900px){.arch,.tech{overflow:visible;padding:12px}.gtwo{grid-template-columns:minmax(0,1fr)}.trow{grid-template-columns:minmax(0,1fr)}.trow.hd{display:none}}
 @media (max-width:560px){.gsteps,.gband{grid-template-columns:minmax(0,1fr)}}
 
@@ -1955,7 +1938,7 @@ function paneHtml(){
 /* ---------- venster ---------- */
 function seg(name,opts,cur){return '<div class="seg" role="group">'+opts.map(function(o){return '<button aria-pressed="'+(cur===o[0])+'" data-act="set" data-n="'+name+'" data-v="'+o[0]+'">'+o[1]+'</button>'}).join('')+'</div>'}
 /* ---------- weergave: architectuur ---------- */
-var LANE={W:['Werkomgeving en adapter','p-teal'],K:['Assistentkern','p-green'],I:['Integratielaag','p-grey'],P:['XENA-platform','p-violet'],A:['Aanvoer','p-amber'],B:['Brug','p-grey']};
+var LANE={W:['Werkomgeving en adapter','p-teal'],K:['Assistentkern','p-green'],I:['Integratielaag','p-grey'],P:['XENA-platform','p-violet']};
 var SEQ=[
  {t:'Eerste keer opslaan',ref:'F.1',s:[
   ['W','De medewerker slaat op. De adapter merkt dat op en levert de inhoud.'],
@@ -1998,25 +1981,7 @@ var SEQ=[
  {t:'Waarmerken',ref:'24.5',whole:true,s:[
   ['K','De kern biedt de vastgestelde versie aan, met de verzameling bindingen.'],
   ['P','Waarmerken loopt op de achtergrond, in de ingang voor zwaar werk. Gebeurtenis: versie gewaarmerkt.'],
-  ['K','De kern haalt de uitkomst op en toont haar in het paneel.']]},
- {t:'E-mail ontvangen',dir:'in',s:[
-  ['A','De mailprovider ontvangt het bericht via SMTP. Een transportregel stuurt het als EML door, zonder kopie in de postbus.'],
-  ['A','Kafka buffert het bericht en garandeert dat het aankomt, ook als Nextcloud even niet bereikbaar is.'],
-  ['B','De brug ontdubbelt op Message-ID en schrijft het bericht via WebDAV in Nextcloud. Bijlagen worden eigen objecten.'],
-  ['P','Registreren: Nextcloud meldt het bericht aan het register, dat de identificatie toekent en afzender, ontvangers en ontvangstdatum vastlegt. Gebeurtenis: bericht ontvangen.'],
-  ['P','Opslaan: de objectopslag bewaart één EML, onveranderlijk en met bewaarvergrendeling. De zoekindex volgt het register.'],
-  ['W','De medewerker ziet het bericht via IMAP in de mailomgeving. Het paneel vraagt naar zakelijk of persoonlijk, zaak en dossier; de bedenktijd begint.']]},
- {t:'Chatbericht ontvangen',dir:'in',s:[
-  ['A','Een collega of partner plaatst een bericht in de chatdienst van een leverancier. De dienst stuurt een melding naar het meldpunt van de gemeente.'],
-  ['B','De brug haalt het bericht op en schrijft het via WebDAV in Nextcloud, met het oorspronkelijke formaat erbij.'],
-  ['P','Registreren: het register kent de identificatie toe, hangt het bericht aan het gesprek en legt de bron bij de leverancier vast. Een bewerking wordt een nieuwe versie. Gebeurtenis: bericht ontvangen.'],
-  ['P','Opslaan: objectopslag en zoekindex zoals bij elk ander object. Bijlagen blijven eigen objecten.'],
-  ['W','Waar de chatomgeving het toelaat, vraagt het paneel naar zakelijk of persoonlijk en naar de zaak, net als bij een e-mail.']]},
- {t:'Brief of formulier ontvangen',dir:'in',s:[
-  ['A','Een brief wordt gescand bij de postregistratie; een formulier komt binnen via het formulierenplatform of de berichtenbox.'],
-  ['B','Een brug schrijft het stuk via WebDAV in Nextcloud, met de gegevens van ontvangst erbij.'],
-  ['P','Registreren en opslaan zoals bij elk ander object. Gebeurtenis: stuk ontvangen.'],
-  ['W','Het zaaksysteem krijgt een verwijzing en blijft leidend; de koppeling met de zaak is een kenmerk in het register.']]}
+  ['K','De kern haalt de uitkomst op en toont haar in het paneel.']]}
 ];
 var WIRE=[
  {t:'Het contract tussen werkomgeving en kern',d:'Twee richtingen, bewust gescheiden. De adapter biedt de documentzijde aan; de kern gebruikt de paneelzijde om met de medewerker te praten.',m:
@@ -2031,34 +1996,25 @@ function archHtml(){
   function bx(t,d){return '<div class="bx"><b>'+t+'</b><span>'+d+'</span></div>'}
   function layer(cls,h,note,boxes){return '<div class="layer '+cls+'"><h3>'+h+'</h3><div class="boxes">'+boxes+'</div>'+(note?'<p class="hint">'+note+'</p>':'')+'</div>'}
   function conn(i,lab){return '<div class="conn"><button data-act="wire" data-i="'+i+'">'+lab+'</button></div>'}
-  function inb(i,lab){return '<div class="conn"><button data-act="archh" data-i="'+i+'">'+lab+'</button></div>'}
-  var IN0=SEQ.findIndex(function(x){return x.dir==='in'});
-  var left='<div><h2>Van gebaar tot gebeurtenis</h2><p>De assistent is een dunne laag op een bestaand platform. Wat de medewerker maakt, loopt door vier omgevingen; het werk en de vastlegging gebeuren op het platform, nooit in de werkomgeving. Wat binnenkomt, loopt daarnaast: alleen tussen backendsystemen, niet via de werkplek.</p>'+
-    '<div class="xtop"><div class="xcol"><div class="xdir"><span class="pill p-teal">Uitgaand</span>Wat de medewerker maakt</div>'+
+  var left='<div><h2>Van gebaar tot gebeurtenis</h2><p>De assistent is een dunne laag op een bestaand platform. Wat de medewerker doet, loopt door vier omgevingen; het werk en de vastlegging gebeuren op het platform, nooit in de werkomgeving.</p>'+
     layer('l1','Gebruikersomgeving, de werkplek van de medewerker','Dit is de enige omgeving die de gemeente niet volledig beheerst. Daarom staan hier geen sleutels, geen tokens en geen gegevens.',
-      bx('Kantoorpakket','Word, LibreOffice, Collabora en andere: tekst, rekenblad en presentatie')+bx('Mailomgeving','Uitgaande berichten ontstaan hier; inkomende komen hier binnen. De postbus staat in het e-mailarchief van XENA, via IMAP')+bx('Chatomgeving','Een chat in eigen beheer of van een leverancier; het paneel waar de omgeving dat toelaat')+bx('Adapter','Eén dunne adapter per werkomgeving. Levert de inhoud, neemt haar terug en zegt wat de omgeving kan')+bx('Paneel','Wat de medewerker ziet en waarmee zij antwoordt'))+
+      bx('Kantoorpakket','Word, LibreOffice, Collabora en andere: tekst, rekenblad en presentatie')+bx('Mailomgeving','Uitgaande berichten ontstaan hier; inkomende komen hier binnen. De postbus staat in het e-mailarchief van XENA, via IMAP')+bx('Adapter','Eén dunne adapter per werkomgeving. Levert de inhoud, neemt haar terug en zegt wat de omgeving kan')+bx('Paneel','Wat de medewerker ziet en waarmee zij antwoordt'))+
     conn(0,'Het contract, in twee richtingen · bekijk een voorbeeld')+
     layer('l2','Assistentkern, in elke werkomgeving gelijk','De kern kent het contract en kent geen werkomgevingen. Zij onthoudt niets tussen twee aanroepen.',
       bx('Zes modules','Metadateren, Toegankelijkheid, Anonimiseren, Classificeren, Waarmerken en Workflow')+bx('Coördinatie','Bepaalt welke bewerking wordt aangeroepen en wat er met de uitkomst gebeurt')+bx('Beoordelingsweergave','Het enige eigen venster, voor beslissingen die niet per werkomgeving mogen verschillen'))+
     conn(1,'Aanroepen, altijd via de integratielaag · bekijk een voorbeeld')+
     layer('l3','Integratielaag, dun en aan de serverkant','Deze laag doet niets wat het platform niet kan. Zij doet wat de werkplek niet mag.',
       bx('Aanmelding','Stelt vast wie de medewerker is')+bx('Geheimen','Sleutels en tokens blijven hier, buiten de werkplek')+bx('Doorgeven','Geeft elke aanroep door aan de juiste ingang van het platform'))+
-    '</div><div class="harrow" aria-hidden="true"><span>verzenden via de mailprovider</span><b>→</b></div><div class="xcol"><div class="xdir"><span class="pill p-amber">Inkomend</span>Wat binnenkomt</div>'+
-    layer('l2a','Aanvoer, vervangbaar','Loopt uitsluitend tussen backendsystemen. Vervangt de gemeente een dienst, dan verandert alleen deze laag.',
-      bx('Mailprovider','Verzenden en ontvangen via SMTP. Een transportregel stuurt elk bericht als EML door, zonder kopie')+bx('Chatdiensten','Meldingen en webhooks van de leverancier. Een chat in eigen beheer schrijft rechtstreeks')+bx('Post en formulieren','Scans van de postregistratie, het formulierenplatform en de berichtenbox')+bx('Kafka','Buffert en garandeert aflevering'))+
-    inb(IN0,'Elk bericht één keer · bekijk de stappen')+
-    layer('l3b','Brug','Het enige onderdeel dat er voor de aanvoer bij komt. Daarna loopt een bericht langs dezelfde weg als een bestand op een netwerkschijf.',
-      bx('Brug naar Nextcloud','Ontdubbelen, uitpakken en wegschrijven via WebDAV. Geen eigen opslag'))+
-    '<div class="xfill" aria-hidden="true"></div></div></div><div class="xconn"><div>'+conn(2,'Twee ingangen, elke vastlegging een gebeurtenis · bekijk een voorbeeld')+'</div><div></div><div>'+inb(IN0,'Registreren en opslaan · bekijk de stappen')+'</div></div>'+
+    conn(2,'Twee ingangen, elke vastlegging een gebeurtenis · bekijk een voorbeeld')+
     layer('l4 key','XENA-platform, waar het werk gebeurt','Valt het platform weg, dan stopt de assistent met aanbieden wat zij niet kan waarmaken, en zegt zij dat. Het werk van de medewerker blokkeert zij niet.',
-      bx('Objecten en versies','Identificatie, versies, bindingen en metagegevens')+bx('Snelle, lezende vragen','Toegankelijkheid beoordelen, persoonsgegevens signaleren, beleid evalueren')+bx('Zwaar werk op de achtergrond','Lakken, waarmerken, formaat omzetten, samenstellen')+bx('Beleid','Openbaarheid, vertrouwelijkheid en bewaring, per onderdeel te toetsen')+bx('Sleutelbeheer','Sleutels voor versleuteling en waarmerk')+bx('Bestandstoegang','Hetzelfde object als bestand, voor de kantoorpakketten')+bx('Register','Kent de identificatie toe, legt ontvangst, verzending en koppelingen vast')+bx('Berichtenarchief','E-mail en chat, elk bericht één keer als object. De postbus via IMAP, het adresboek via CardDAV'))+'</div>';
-  var right='<div><h2>Wat er gebeurt bij een handeling</h2><p>Kies een handeling. Uitgaand toont wat de medewerker doet, langs vier deelnemers; inkomend toont hoe een bericht wordt ontvangen, geregistreerd en opgeslagen.</p>'+
-    ['out','in'].map(function(dr){return '<div class="chgrp"><span class="pill '+(dr==='in'?'p-amber':'p-teal')+'">'+(dr==='in'?'Inkomend':'Uitgaand')+'</span><div class="chips" role="group" aria-label="'+(dr==='in'?'Inkomend':'Uitgaand')+'">'+SEQ.map(function(x,i){return (x.dir||'out')===dr?'<button data-act="archh" data-i="'+i+'" aria-pressed="'+(a.h===i)+'">'+x.t+'</button>':''}).join('')+'</div></div>'}).join('')+
+      bx('Objecten en versies','Identificatie, versies, bindingen en metagegevens')+bx('Snelle, lezende vragen','Toegankelijkheid beoordelen, persoonsgegevens signaleren, beleid evalueren')+bx('Zwaar werk op de achtergrond','Lakken, waarmerken, formaat omzetten, samenstellen')+bx('Beleid','Openbaarheid, vertrouwelijkheid en bewaring, per onderdeel te toetsen')+bx('Sleutelbeheer','Sleutels voor versleuteling en waarmerk')+bx('Bestandstoegang','Hetzelfde object als bestand, voor de kantoorpakketten')+bx('E-mailarchief','Elk bericht als object. De postbus via IMAP, het adresboek via CardDAV'))+'</div>';
+  var right='<div><h2>Wat er gebeurt bij een handeling</h2><p>Kies een handeling uit de demo. De stappen tonen telkens dezelfde vier deelnemers.</p>'+
+    '<div class="chips" role="group" aria-label="Handeling">'+SEQ.map(function(x,i){return '<button data-act="archh" data-i="'+i+'" aria-pressed="'+(a.h===i)+'">'+x.t+'</button>'}).join('')+'</div>'+
     (q.seg?'<div class="ctl" style="margin:10px 0 0"><span>De werkomgeving kan een deel van het document vervangen</span><div class="seg" role="group"><button data-act="archseg" data-v="1" aria-pressed="'+a.seg+'">Ja</button><button data-act="archseg" data-v="0" aria-pressed="'+!a.seg+'">Nee</button></div></div>':'')+
     '<ol class="sq">'+q.s.map(function(st,i){var alt=st[2]&&!a.seg;return '<li><span class="n">'+(i+1)+'</span><div><span class="pill '+LANE[st[0]][1]+'">'+LANE[st[0]][0]+'</span><p>'+(alt?st[2]:st[1])+'</p></div></li>'}).join('')+'</ol>'+
     (q.seg?'<p class="hint">'+(a.seg?'Bewerken ter plaatse is een versnelling, geen tweede werkwijze. De bewerking en de uitkomst zijn dezelfde.':'Zonder dat vermogen gaat het hele document heen en weer. Dat werkt overal; de medewerker ziet het document opnieuw laden.')+'</p>':'')+
     (q.whole?'<p class="hint">Deze bewerking raakt het hele document en kan daarom nooit op een deel worden uitgevoerd.</p>':'')+
-    (q.dir==='in'?'<p class="hint">Een inkomend bericht komt niet via de werkplek en niet via de integratielaag binnen. Het staat al in het archief voordat de medewerker het ziet. Een antwoord is een nieuw, uitgaand object met een relatie naar het bericht waarop het antwoordt.</p>':'<p class="hint">Een aanroep die de integratielaag overslaat, komt niet voor. <span>Verwijzing in Deel II: '+q.ref+'</span></p>')+
+    '<p class="hint">Een aanroep die de integratielaag overslaat, komt niet voor. <span>Verwijzing in Deel II: '+q.ref+'</span></p>'+
     '<section class="tgrp"><header><b>Wat het contract bewust niet bevat</b></header><div><ul><li><b>Geen documenttypen.</b> Het contract kent inhoud en een aanduiding van het formaat, verder niets.</li><li><b>Geen bedrijfsbegrippen.</b> Zaak, dossier en bewaartermijn komen er niet in voor.</li><li><b>Geen aanmelding.</b> Wie de medewerker is, regelt de laag erachter.</li><li><b>Geen weergavetechniek.</b> Ook een omgeving die alleen een mededeling kan tonen, kan eraan voldoen.</li></ul></div></section>'+
     '<section class="tgrp"><header><b>Wat wegvalt doordat de assistent een cliënt is</b></header><div><ul><li>Geen eigen opslag: de objecten staan in het platform.</li><li>Geen eigen verwerking: het zware werk doet het platform.</li><li>Geen eigen metagegevensbank, zoekindex of logboek.</li><li>Geen eigen sleutelbeheer.</li></ul><p class="hint">Daar staat een prijs tegenover: de assistent is zo beschikbaar als het platform.</p></div></section>'+
     '<section class="tgrp"><header><b>Wat de assistent niet belooft</b></header><div><ul><li>Dat alle stukken juist zijn beschreven. Zij vraagt op het goede moment; de medewerker antwoordt of niet.</li><li>Dat geen persoonsgegeven wordt gemist. Herkenning blijft een schatting.</li><li>Dat zij altijd beschikbaar is.</li><li>Dat alles wat ontstaat, langs haar komt.</li></ul></div></section></div>';
@@ -2720,7 +2676,7 @@ var ACT={
   nav:function(d){var v=d.v;if(D0[v]){var was=S.view;S.view='doc';if(S.type===v){if(was!=='doc')render();return}ACT.set({n:'type',v:v})}else{S.view=v;render()}},
   view:function(d){S.view=d.v;if(d.v==='beo'){S.rv.page=0;S.viewer='opsteller';hood('beoordelingsweergave geopend {object: '+D().meta.id.slice(0,8)+'} · '+H[S.type].length+' voorstellen')}render()},
   mld:function(){S.mld=!S.mld;render()},
-  archh:function(d){var q=SEQ[+d.i];S.arch.h=+d.i;hood('handeling: '+q.t+' · '+q.s.length+(q.dir==='in'?' stappen, van aanvoer tot register':' stappen over vier omgevingen'));render()},
+  archh:function(d){S.arch.h=+d.i;hood('handeling: '+SEQ[+d.i].t+' · '+SEQ[+d.i].s.length+' stappen over vier omgevingen');render()},
   archseg:function(d){S.arch.seg=d.v==='1';render()},
   wire:function(d){wireDlg(+d.i)},
   tgsel:function(d){S.tg=d.v;render()},

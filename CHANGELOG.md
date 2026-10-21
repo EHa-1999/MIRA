@@ -2,6 +2,9 @@
 
 Het versienummer staat in `VERSION`. Bij elke nieuwe versie: nummer ophogen, hier een regel toevoegen, `python3 build.py` draaien.
 
+## Versie 37 · 21-10-2026
+- Architectuur is terug naar de opbouw van versie 35: de vier omgevingen van de assistent en de handelingen uit de demo. De inkomende stroom uit versie 36 is weggehaald.
+
 ## Versie 36 · 21-10-2026
 - Architectuur toont naast de uitgaande stroom ook de inkomende: e-mail, chat en post of formulieren komen binnen via een vervangbare aanvoer en een brug naar Nextcloud, alleen tussen backendsystemen en niet via de werkplek. Gelijk aan de demo over e-mailarchivering.
 - Drie nieuwe handelingen, gegroepeerd als inkomend: e-mail ontvangen, chatbericht ontvangen, brief of formulier ontvangen. De stappen laten zien hoe een bericht wordt ontvangen, geregistreerd en opgeslagen.
