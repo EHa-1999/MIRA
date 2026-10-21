@@ -2,6 +2,11 @@
 
 Het versienummer staat in `VERSION`. Bij elke nieuwe versie: nummer ophogen, hier een regel toevoegen, `python3 build.py` draaien.
 
+## Versie 40 · 21-10-2026
+- Regels maken en wijzigen in een eigen venster van de assistent, gelijk aan de demo over e-mailarchivering. Het venster toont welke berichten in de postbus aan de regel voldoen en wat er per bericht verandert.
+- Toepassen: een regel gaat ook over de berichten die er al zijn, metagegevens alleen binnen de bedenktijd. Regels van de organisatie en het team kun je bekijken en toepassen, niet wijzigen.
+- Het contract kent een optionele aanroep venster(pagina): Office via de Dialog API, Outlook (klassiek) via een dialoogvenster, Thunderbird via windows.create. Zonder dat vermogen opent de pagina in de browser.
+
 ## Versie 39 · 21-10-2026
 - Regels in de mailomgeving, gelijk aan de demo over e-mailarchivering: van de organisatie, het team en de medewerker zelf. Een regel zet metagegevens bij binnenkomst en verzending, draait bij het register en valt onder dezelfde bedenktijd. Een nieuwe regel test je eerst op je berichten; persoonlijk maken, weggooien en doorsturen naar buiten de gemeenten kan niet.
 - Een regel van het team koppelt het bericht aan de provincie bij verzending aan het projectdossier. Bij Wie zegt dat? staat de regel als bron.

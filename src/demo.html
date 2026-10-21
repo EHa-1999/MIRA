@@ -333,6 +333,13 @@ h1,h2,h3,h4,p{margin:0}
 .rtest{display:grid;gap:4px;border:1px dashed var(--accent);border-radius:8px;padding:8px 10px;margin-top:6px;background:var(--surface)}
 .rtest ul{display:grid;gap:4px;margin:0;padding:0;list-style:none}.rtest li{display:grid;font-size:12.5px}.rtest li small{color:var(--muted);font-size:11.5px}
 .rtest .ck{display:flex;gap:6px;align-items:flex-start;font-size:12.5px}
+.rc .rbt{display:flex;gap:12px;font-size:12px}
+.dlg.rdlg{max-width:640px}.rdh{display:flex;gap:10px;align-items:center}.rdi{display:grid;place-items:center;width:34px;height:34px;border-radius:8px;background:var(--accent-soft);color:var(--accent);flex:none}
+.rdf{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 12px}.rdf .full{grid-column:1/-1}.rdf .r2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px}.rdf .lab{display:block;font-size:12px;color:var(--muted);margin-bottom:3px}
+.rdf .ck{display:flex;gap:6px;align-items:center;font-size:13px}
+.rprev{border:1px dashed var(--accent);border-radius:8px;padding:10px 12px;display:grid;gap:6px}.rprev ul{display:grid;gap:4px;margin:0;padding:0;list-style:none}.rprev li{display:grid;font-size:13px}.rprev li small{color:var(--muted);font-size:11.5px}.rprev li.chg small{color:var(--green)}
+.rdb{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.rdb .sp{flex:1}
+@media (max-width:560px){.rdf{grid-template-columns:minmax(0,1fr)}}
 .rpol summary{cursor:pointer;font-size:12.5px;font-weight:600}.rpt{border-collapse:collapse;font-size:12px;width:100%;margin-top:6px}.rpt th,.rpt td{padding:3px 4px;border-bottom:1px solid var(--line);text-align:center}.rpt td:first-child,.rpt th:first-child{text-align:left}.rpt tr.dim td{color:var(--muted)}
 .glist{display:flex;flex-direction:column;gap:4px;margin-top:8px}.grow{display:grid;gap:1px;text-align:left;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);font-size:12.5px}.grow:hover{border-color:var(--accent)}.grow span,.gcard span{color:var(--muted);font-size:11.5px}.gcard{display:grid;gap:1px;margin:8px 0}.gcard b{font-size:14px}
 .mrules{margin-top:6px;font-size:12.5px}.mrules summary{cursor:pointer;color:var(--accent);font-weight:500}.mrules ul{margin:6px 0 0;padding-left:18px;list-style:disc;display:flex;flex-direction:column;gap:4px}
@@ -913,7 +920,7 @@ function mailDoc(){return{status:'concept',achteraf:false,cc:[],keuze:{rv:null,r
   rb:{naam:'Bijlage Opbrengstberekening',ico:'table',kind:'att',doc:'rekenblad',in:true},
   citaat:{naam:'Geciteerd bericht provincie',ico:'mail',kind:'inc',in:true}},
   meta:mk('Raadsvoorstel zonnepark De Hoge Weide','e81c0d36-71fa','raad')}}
-function fresh(){return{gab:{q:'',sel:null},rg:{nr:{f:'from',op:'contains',v:'',act:'klass',arg:'beleid',all:true},rl:[
+function fresh(){return{gab:{q:'',sel:null},rg:{dlg:null,rec:null,nr:{f:'from',op:'contains',v:'',act:'klass',arg:'beleid',all:true},rl:[
     {id:'o1',lvl:'org',n:'Woo-postbus',f:'to',op:'is',v:'woo@haarlem.gemeente.org',act:'woo',arg:'Woo-verzoeken en -besluiten',on:true},
     {id:'t1',lvl:'team',n:'Provincie',f:'to',op:'contains',v:'provincie.example',act:'dos',arg:'P-2026-044',on:true},
     {id:'p1',lvl:'mij',n:'Zonnepark',f:'subject',op:'contains',v:'zonnepark',act:'map',arg:'zp',on:true},
@@ -1869,6 +1876,47 @@ var RREC=[{id:'r1',fn:'Omgevingsloket provincie',f:'omgevingsloket@provincie.exa
   {id:'r5',fn:'Dorpsbelang Hoge Weide',f:'info@dorpsbelang.example',s:'Zienswijze zonnepark',b:'Wij steunen het plan, met een paar vragen over de groenstrook.',d:6},
   {id:'r6',fn:'Jeroen Kramer',f:'j.kramer@zandvoort.example',s:'Afstemming Regionale Energiestrategie',b:'Kunnen we de RES-cijfers voor de kust gelijktrekken?',d:12}];
 function RG(){return S.rg}
+function rPool(){var g=RG();if(!g.rec)g.rec=RREC.map(function(x){return Object.assign({folder:'inbox',flag:false,set:{}},x)});return g.rec}
+function rNow(r,x){var k=RA[r.act][1];
+  if(k==='m'){if(x.d>10)return {ch:false,tx:'buiten de bedenktijd: blijft zoals het is'};return x.set[r.act+':'+r.arg]?{ch:false,tx:'al zo, verandert niet'}:{ch:true,tx:'wordt aangevuld, met de regel als bron'}}
+  if(r.act==='map'){var f=(RFOLD.filter(function(z){return z[0]===r.arg})[0]||['',r.arg])[1];return x.folder===r.arg?{ch:false,tx:'staat al in die map'}:{ch:true,tx:'naar map',arg:f}}
+  if(r.act==='flag')return x.flag?{ch:false,tx:'al gemarkeerd'}:{ch:true,tx:'wordt gemarkeerd'};
+  return {ch:false,tx:'doorsturen gebeurt alleen bij aflevering'}}
+function rRun(r){var n=0,mv=0;rPool().forEach(function(x){if(!rMatch(r,x)||!rNow(r,x).ch)return;n++;if(RA[r.act][1]==='m')x.set[r.act+':'+r.arg]=r.id;else if(r.act==='map'){x.folder=r.arg;mv++}else if(r.act==='flag'){x.flag=true;mv++}});
+  hood('POST /register/regels/'+r.id+'/toepassen → '+n+' berichten'+(RA[r.act][1]==='m'?' · metagegevens alleen binnen de bedenktijd':'')+(mv?' · IMAP UID '+(r.act==='map'?'MOVE':'STORE +FLAGS (\\Flagged)')+' ('+mv+')':''));return n}
+function rdArg(d,ro){var a=d.act,dis=ro?' disabled':'',sel=function(L,lab,notr){return '<select class="inp" id="rd-arg" data-ch="rd" data-k="arg"'+dis+'>'+L.map(function(x){return '<option value="'+esc(x[0])+'"'+(d.arg===x[0]?' selected':'')+(notr?' data-notr':'')+'>'+esc(lab(x))+'</option>'}).join('')+'</select>'};
+  if(a==='klass')return sel(Object.keys(CLS).map(function(k){return [k]}),function(x){return CLS[x[0]].lab});
+  if(a==='zaak')return sel(MZAKEN,function(x){return x[0]+' · '+x[1]},true);
+  if(a==='dos')return sel(MDOSS,function(x){return x[0]+' · '+x[1]},true);
+  if(a==='vertr')return sel([['Intern'],['Vertrouwelijk']],function(x){return x[0]});
+  if(a==='woo')return sel(WOOCAT.map(function(v){return [v]}),function(x){return x[0]});
+  if(a==='map')return sel(RFOLD,function(x){return x[1]});
+  if(a==='fwd'||a==='ext')return '<input class="inp" id="rd-arg" data-in="rd" data-k="arg" value="'+esc(d.arg||'')+'" autocomplete="off" placeholder="naam@gemeente.org" data-notr'+dis+'>';
+  return '<div class="ro">—</div>'}
+function rdlgHtml(){
+  var R=RG().dlg,d=R.d,ro=d.lvl!=='mij',err=ro?'':((d.v||'').trim()||RA[d.act][1]==='x'?rCheck(d,'mij'):''),P=rPool(),ok=!err&&(d.v||'').trim().length>=2,H=ok?P.filter(function(x){return rMatch(d,x)}):[],C=H.filter(function(x){return rNow(d,x).ch}),cur=ok&&rMatch(d,rCur());
+  var dis=ro?' disabled':'',ttl=R.mode==='new'?'Nieuwe regel':ro?(d.lvl==='org'?'Regel van de organisatie':'Regel van het team'):'Regel wijzigen';
+  var opt=function(k){return '<option value="'+k+'"'+(d.act===k?' selected':'')+'>'+RA[k][0]+'</option>'},grp=function(lab,kind){return '<optgroup label="'+esc(tr(lab))+'">'+Object.keys(RA).filter(function(k){return RA[k][1]===kind}).map(opt).join('')+'</optgroup>'};
+  var h='<div class="dlg wide rdlg" role="dialog" aria-modal="true" aria-labelledby="dlg-t"><div class="rdh"><span class="rdi">'+tl('filter')+'</span><div><h2 id="dlg-t">'+ttl+'</h2><p class="note" style="margin:0"><span>Venster van de assistent</span> · <span>'+rLvl(d.lvl)[1]+'</span></p></div></div>'
+    +(ro?'<p class="callout" style="margin:0">'+(d.lvl==='org'?'Deze regel is vastgesteld door de informatiebeheerder. Je kunt hem niet wijzigen, wel toepassen op je eigen postbus.':'Deze regel beheert de teamleider. Je kunt hem niet wijzigen, wel toepassen op je eigen postbus.')+'</p>':'')
+    +'<div class="rdf"><div class="full"><label class="lab" for="rd-n">Naam</label><input class="inp" id="rd-n" data-in="rd" data-k="n" value="'+esc(d.n||'')+'" autocomplete="off" placeholder="bijvoorbeeld Collega\'s uit Bloemendaal"'+dis+(d.n?' data-notr':'')+'></div>'
+    +'<div><label class="lab" for="rd-f">Als</label><div class="r2"><select class="inp" id="rd-f" data-ch="rd" data-k="f"'+dis+'>'+Object.keys(RF).map(function(k){return '<option value="'+k+'"'+(d.f===k?' selected':'')+'>'+RF[k]+'</option>'}).join('')+'</select><select class="inp" id="rd-op" data-ch="rd" data-k="op" aria-label="Voorwaarde"'+dis+'>'+Object.keys(ROP).map(function(k){return '<option value="'+k+'"'+(d.op===k?' selected':'')+'>'+ROP[k]+'</option>'}).join('')+'</select></div></div>'
+    +'<div><label class="lab" for="rd-v">Tekst</label><input class="inp" id="rd-v" data-in="rd" data-k="v" value="'+esc(d.v||'')+'" autocomplete="off" placeholder="bijvoorbeeld bloemendaal.gemeente.org" data-notr'+dis+'></div>'
+    +'<div><label class="lab" for="rd-act">Dan</label><select class="inp" id="rd-act" data-ch="rd" data-k="act"'+dis+'>'+grp('In het register','m')+grp('Bij aflevering','d')+grp('Kan niet','x')+'</select></div>'
+    +'<div><label class="lab" for="rd-arg">Waarde</label>'+rdArg(d,ro)+'</div>'
+    +'<label class="ck full" for="rd-on"><input type="checkbox" id="rd-on" data-ch="rdon"'+(d.on?' checked':'')+dis+'><span>Actief: geldt voor nieuwe berichten</span></label></div>'
+    +(err?'<div class="callout c-red" style="margin:0">'+err+'</div>':'');
+  h+='<section class="rprev"><b>Voorbeeld in je postbus</b>'+(ok?'<span class="note" style="margin:0">'+H.length+' van de '+P.length+' berichten voldoen. Toepassen verandert er '+C.length+'.</span>':'<span class="note" style="margin:0">Vul in waarop de regel moet letten, dan zie je welke berichten eraan voldoen.</span>')
+    +(H.length||cur?'<ul>'+H.slice(0,8).map(function(x){var y=rNow(d,x);return '<li class="'+(y.ch?'chg':'')+'"><span data-notr>'+esc(x.s)+'</span><small><span>'+y.tx+'</span>'+(y.arg?' <span>'+esc(y.arg)+'</span>':'')+'</small></li>'}).join('')
+      +(cur?'<li><span data-notr>'+esc(rCur().s)+'</span><small><span>Dit bericht</span> · <span>'+(RA[d.act][1]==='m'?'bij verzenden: wordt aangevuld, met de regel als bron':'bij verzenden niet: alleen bij aflevering')+'</span></small></li>':'')+'</ul>':'')+'</section>'
+    +'<p class="note" style="margin:0">Opslaan geldt voor nieuwe berichten. Met Toepassen gaat de regel ook over de berichten die er al zijn: metagegevens alleen binnen de bedenktijd, mappen en markeringen in de hele postbus. Wat een regel zet, krijgt de regel als bron.</p>';
+  var can=ok&&!err,ap=C.length;
+  h+='<div class="rowb rdb">'+(R.mode==='edit'?'<button class="btn" data-act="rddel">Verwijderen</button>':'')+'<span class="sp"></span><button class="btn" data-act="rdx">Annuleren</button>'
+    +(ro?'<button class="btn primary" id="rd-go" data-act="rdrun"'+(ap?'':' disabled')+'>'+(ap===1?'Toepassen op 1 bericht':'Toepassen op '+ap+' berichten')+'</button>'
+      :'<button class="btn" data-act="rdsave"'+(can?'':' disabled')+'>Opslaan</button><button class="btn primary" id="rd-go" data-act="rdsave" data-v="run"'+(can&&ap?'':' disabled')+'>'+(ap===1?'Opslaan en toepassen op 1 bericht':'Opslaan en toepassen op '+ap+' berichten')+'</button>')+'</div></div>';
+  return h}
+function rdShow(fid,pos){var L=$('layer');L.innerHTML=rdlgHtml();loc(L);var R=RG().dlg,f=$(fid||(R.d.lvl==='mij'&&!R.run?'rd-n':'rd-go'));if(f&&!f.disabled){f.focus();if(pos!=null&&f.setSelectionRange)f.setSelectionRange(pos,pos)}else{var c=L.querySelector('[data-act="rdx"]');if(c)c.focus()}
+  if(R.run){var pv=L.querySelector('.rprev');if(pv)pv.scrollIntoView({block:'nearest'});R.run=false}}
 function rById(id){return RG().rl.filter(function(r){return r.id===id})[0]}
 function rLvl(k){return RLV.filter(function(l){return l[0]===k})[0]}
 function rCheck(r,lvl){if(RA[r.act][1]==='x')return RWHY[r.act];if(RPOL[lvl].indexOf(r.act)<0)return RWHY[r.act]||RWHY.dlv;
@@ -1878,11 +1926,11 @@ function rMatch(r,x){var v=(r.v||'').trim().toLowerCase();if(v.length<2)return f
   var H=r.f==='from'?[x.fn,x.f]:r.f==='to'?[x.to||'noor.bakker@haarlem.gemeente.org']:r.f==='subject'?[x.s]:[x.b];
   return H.some(function(h){h=String(h).toLowerCase();return r.op==='is'?h===v:h.indexOf(v)>=0})}
 function rArg(r){var a=r.arg;return r.act==='klass'?(CLS[a]||{lab:a}).lab:r.act==='zaak'?a+' · '+(MZAKEN.filter(function(z){return z[0]===a})[0]||['',''])[1]:r.act==='dos'?a+' · '+(MDOSS.filter(function(z){return z[0]===a})[0]||['',''])[1]:r.act==='map'?(RFOLD.filter(function(f){return f[0]===a})[0]||['',a])[1]:a||''}
-function rCard(r,edit){var k=RA[r.act][1],n=RREC.concat([rCur()]).filter(function(x){return rMatch(r,x)}).length;
+function rCard(r,edit){var k=RA[r.act][1],n=rPool().concat([rCur()]).filter(function(x){return rMatch(r,x)}).length;
   return '<div class="rc'+(r.on?'':' off')+'"><div class="r1"><b><span>'+(r.f==='from'?'Als afzender':r.f==='to'?'Als ontvanger':r.f==='subject'?'Als onderwerp':'Als tekst')+'</span> <span>'+ROP[r.op]+'</span> <span data-notr>“'+esc(r.v)+'”</span></b>'
-    +(edit?'<button class="btn sm" data-act="rtog" data-id="'+r.id+'" aria-pressed="'+r.on+'">'+(r.on?'Actief':'Inactief')+'</button><button class="btn sm" data-act="rdel" data-id="'+r.id+'" aria-label="Verwijderen" title="Verwijderen">×</button>':'<span class="pill p-grey">'+(r.on?'Actief':'Inactief')+'</span>')+'</div>'
+    +(edit?'<button class="btn sm" data-act="rtog" data-id="'+r.id+'" aria-pressed="'+r.on+'">'+(r.on?'Actief':'Inactief')+'</button>':'<span class="pill p-grey">'+(r.on?'Actief':'Inactief')+'</span>')+'</div>'
     +'<span class="rt"><span data-notr>→ </span><span>'+RA[r.act][0]+'</span>'+(rArg(r)?'<span>: </span><span'+(r.act==='dos'||r.act==='zaak'?' data-notr':'')+'>'+esc(rArg(r))+'</span>':'')+'</span>'
-    +'<span class="rk"><span class="pill '+(k==='m'?'p-violet':'p-grey')+'">'+(k==='m'?'Register':'Aflevering')+'</span><span>'+(n===1?'past op 1 bericht':'past op '+n+' berichten')+'</span></span></div>'}
+    +'<span class="rk"><span class="pill '+(k==='m'?'p-violet':'p-grey')+'">'+(k==='m'?'Register':'Aflevering')+'</span><span>'+(n===1?'past op 1 bericht':'past op '+n+' berichten')+'</span></span><span class="rbt"><button class="link" data-act="ropen" data-id="'+r.id+'">'+(edit?'Wijzigen':'Bekijken')+'</button><button class="link" data-act="ropen" data-id="'+r.id+'" data-v="run">Toepassen…</button></span></div>'}
 function rEffect(r,x){var k=RA[r.act][1];if(k==='d')return x.out?'bij verzenden niet: alleen bij aflevering':'alleen bij nieuwe berichten';
   if(x.out){var m=D('mail').meta;return (r.act==='dos'&&m.doss.indexOf(r.arg)>=0)||(r.act==='zaak'&&m.zaak)?'al zo, verandert niet':'bij verzenden: wordt aangevuld, met de regel als bron'}
   return x.d<=10?'wordt aangevuld, met de regel als bron':'buiten de bedenktijd: alleen nieuwe berichten'}
@@ -1897,23 +1945,11 @@ function rArgField(nr){var a=nr.act,sel=function(L,lab,notr){return '<select cla
   return '<div class="ro">—</div>'}
 function rDefArg(a){return a==='klass'?'beleid':a==='zaak'?MZAKEN[0][0]:a==='dos'?MDOSS[0][0]:a==='vertr'?'Intern':a==='woo'?WOOCAT[0]:a==='map'?'zp':''}
 function regHtml(){
-  var g=RG(),nr=g.nr,err=(nr.v||'').trim()||RA[nr.act][1]==='x'?rCheck(nr,'mij'):'',pool=RREC.concat([rCur()]),H=!err&&(nr.v||'').trim().length>=2?pool.filter(function(x){return rMatch(nr,x)}):null;
-  var h='<div class="sec"><p class="note" style="margin:0">Een regel zet metagegevens zodra een bericht binnenkomt of vertrekt. Hij draait bij het register, niet in je mailprogramma, en werkt dus overal. Wat een regel zet, kun je binnen de bedenktijd herzien, net als je eigen keuze.</p></div>';
+  var g=RG();
+  var h='<div class="sec"><p class="note" style="margin:0 0 8px">Een regel zet metagegevens zodra een bericht binnenkomt of vertrekt. Hij draait bij het register, niet in je mailprogramma, en werkt dus overal. Wat een regel zet, kun je binnen de bedenktijd herzien, net als je eigen keuze.</p><button class="btn sm primary" data-act="rnew">Nieuwe regel</button></div>';
   RLV.forEach(function(l){var R=g.rl.filter(function(r){return r.lvl===l[0]});
     h+='<div class="sec"><h3><span>'+l[1]+'</span><span data-notr>'+R.length+'</span></h3><p class="note" style="margin:0 0 6px">'+l[2]+'</p><div class="rgl">'+R.map(function(r){return rCard(r,l[0]==='mij')}).join('')+'</div></div>'});
-  var opt=function(k){return '<option value="'+k+'"'+(nr.act===k?' selected':'')+'>'+RA[k][0]+'</option>'},grp=function(lab,kind){return '<optgroup label="'+esc(tr(lab))+'">'+Object.keys(RA).filter(function(k){return RA[k][1]===kind}).map(opt).join('')+'</optgroup>'};
-  h+='<div class="sec"><h3><span>Nieuwe regel</span></h3><div class="rf1">'
-    +'<label class="lab" for="nr-f">Als</label><div class="r2"><select class="inp" id="nr-f" data-ch="nr" data-k="f">'+Object.keys(RF).map(function(k){return '<option value="'+k+'"'+(nr.f===k?' selected':'')+'>'+RF[k]+'</option>'}).join('')+'</select><select class="inp" id="nr-op" data-ch="nr" data-k="op" aria-label="Voorwaarde">'+Object.keys(ROP).map(function(k){return '<option value="'+k+'"'+(nr.op===k?' selected':'')+'>'+ROP[k]+'</option>'}).join('')+'</select></div>'
-    +'<label class="lab" for="nr-v">Tekst</label><input class="inp" id="nr-v" data-in="nrv" value="'+esc(nr.v)+'" autocomplete="off" placeholder="bijvoorbeeld bloemendaal.gemeente.org">'
-    +'<label class="lab" for="nr-act">Dan</label><select class="inp" id="nr-act" data-ch="nr" data-k="act">'+grp('In het register','m')+grp('Bij aflevering','d')+grp('Kan niet','x')+'</select>'
-    +'<label class="lab" for="nr-arg">Waarde</label>'+rArgField(nr)
-    +(err?'<div class="callout c-red" style="margin:4px 0 0">'+err+'</div>':'');
-  if(H){var mt=RA[nr.act][1]==='m';
-    h+='<div class="rtest"><b>Getest op je berichten</b><span class="note">'+H.length+' van de '+pool.length+' berichten voldoen.</span>'
-      +(H.length?'<ul>'+H.slice(0,5).map(function(x){return '<li><span data-notr>'+esc(x.s)+'</span><small>'+(x.out?'<span>Dit bericht</span> · ':'')+'<span>'+rEffect(nr,x)+'</span></small></li>'}).join('')+'</ul>':'')
-      +(mt?'<label class="ck" for="nr-all"><input type="checkbox" id="nr-all" data-ch="nrall"'+(nr.all?' checked':'')+'><span>Ook toepassen op berichten die nog binnen de bedenktijd vallen</span></label>':'<span class="note">Een regel bij aflevering geldt alleen voor nieuwe berichten. XENA schrijft er het Sieve-script voor.</span>')+'</div>'}
-  h+='<div class="rowb" style="justify-content:flex-start"><button class="btn sm primary" data-act="radd"'+(err||!H?' disabled':'')+'>Regel aanzetten</button></div></div></div>';
-  h+='<div class="sec" style="border-bottom:0"><details class="rpol"><summary>Wat mag op welk niveau</summary><table class="rpt"><thead><tr><th></th><th>Org.</th><th>Team</th><th>Pers.</th></tr></thead><tbody>'
+  h+='<div class="sec" style="border-bottom:0"><p class="note" style="margin:0 0 8px">Nieuwe en gewijzigde regels gelden voor nieuwe berichten. Met Toepassen gaat een regel ook over de berichten die al in je postbus staan.</p><details class="rpol"><summary>Wat mag op welk niveau</summary><table class="rpt"><thead><tr><th></th><th>Org.</th><th>Team</th><th>Pers.</th></tr></thead><tbody>'
     +Object.keys(RA).map(function(k){var x=RA[k][1]==='x';return '<tr'+(x?' class="dim"':'')+'><td>'+RA[k][0]+'</td>'+RLV.map(function(l){var ok=!x&&RPOL[l[0]].indexOf(k)>=0;return '<td>'+(ok?'✓':x?'×':'–')+'</td>'}).join('')+'</tr>'}).join('')
     +'</tbody></table></details><p class="note" style="margin:8px 0 0">Wat bij aflevering moet gebeuren, zoals een map of het afwezigheidsbericht, schrijft XENA als Sieve-script voor de IMAP-server. Mailprogramma\'s kunnen dat script niet wijzigen. Alleen in de mailomgeving; in tekst, rekenblad en presentatie heeft het paneel geen regels.</p></div>';
   return h}
@@ -2227,7 +2263,8 @@ var TOPS=[
  ['documentzijde','gebaar(soort)','optioneel','Opslaan als, verzenden of plakken aankondigen, zodat de assistent op het goede moment kan vragen.'],
  ['paneelzijde','toon(tekst)','basis','Iets tonen. Ook een omgeving die alleen een melding kan tonen, voldoet.'],
  ['paneelzijde','vraag(tekst, keuzes)','optioneel','Eén vraag op het juiste moment. Zonder dit vermogen blijft de vraag in het paneel staan.'],
- ['paneelzijde','voortgang(tekst) en faal(reden, herhalenZinvol)','basis','Wat er gebeurt, en wat er misging.']];
+ ['paneelzijde','voortgang(tekst) en faal(reden, herhalenZinvol)','basis','Wat er gebeurt, en wat er misging.'],
+ ['paneelzijde','venster(pagina)','optioneel','Een eigen venster van de assistent openen, zoals de beoordelingsweergave of de regels. Office: de Dialog API. Outlook (klassiek): een dialoogvenster van de COM-code. Thunderbird: windows.create. Zonder dit vermogen opent de pagina in de browser.']];
 var TCONTRACT=[
  ['Berichtvorm','JSON-RPC 2.0. Elke aanroep heeft een naam, parameters en een antwoord of een fout.'],
  ['Transport per adapter','Office.js: een functieaanroep in hetzelfde venster. Collabora: PostMessage tussen editor en paneel. Outlook (klassiek): WebView2-berichten naar de COM-code. LibreOffice: de UNO-brug. Thunderbird: berichten tussen paneel en achtergrondscript.'],
@@ -2246,7 +2283,7 @@ var TIF=[
  ['Register','Publicatiedepot (TINA)','HTTPS, REST','Token per dienst','PDF/A-2b met metagegevens volgens DiWoo'],
  ['Zwaar werk','Vertrouwensdienstverlener','CSC-API voor handtekening op afstand','OAuth 2.0','PAdES-zegel, tijdstempel RFC 3161'],
  ['Platformdiensten','Sleutelbeheer','OpenBao Transit API','Kubernetes-serviceaccount','Versleutelde gegevenssleutels'],
- ['Mailomgeving','E-mailarchief','IMAP, ManageSieve, CardDAV','OIDC of app-wachtwoord','EML, vCard']];
+ ['Mailomgeving','E-mailarchief','IMAP, CardDAV (geen ManageSieve: de regels schrijft XENA)','OIDC of app-wachtwoord','EML, vCard']];
 function techHtml(){
   var badge=function(v){return '<span class="pill '+(v==='Vast'?'p-green':'p-amber')+'">'+(v==='Vast'?'Uitgangspunt':'Kandidaat')+'</span>'};
   return '<div class="tech"><div><h2>De technische opbouw</h2><p>Concept. Per laag de componenten, de technologie en waar ze draaien, en daarna het contract en de koppelingen. Uitgangspunt betekent: volgt uit de architectuur. Kandidaat betekent: een voorbeeld dat past, nog niet gekozen. Wat de functies vragen, staat onder Groeipad.</p></div>'+
@@ -2757,11 +2794,17 @@ var ACT={
     S.lk={k:null,q:'',i:0,busy:false};render()},
   rtog:function(d){var r=rById(d.id);if(!r||r.lvl!=='mij')return;r.on=!r.on;hood('PATCH /register/regels/'+r.id+' → '+(r.on?'actief':'inactief')+(RA[r.act][1]==='d'?' · Sieve-script opnieuw gegenereerd':''));render()},
   rdel:function(d){var r=rById(d.id);if(!r||r.lvl!=='mij')return;RG().rl=RG().rl.filter(function(x){return x!==r});hood('DELETE /register/regels/'+r.id+' → 204 · aangevulde berichten blijven zoals ze zijn');toast('Regel verwijderd. Berichten die hij al heeft aangevuld, blijven zoals ze zijn.');render()},
-  radd:function(){var g=RG(),r=Object.assign({},g.nr),err=rCheck(r,'mij');if(err){toast(err);return}
-    r.v=r.v.trim();r.n=r.v;r.lvl='mij';r.on=true;r.id='p'+(g.rl.filter(function(x){return x.lvl==='mij'}).length+1);while(rById(r.id))r.id+='b';var all=r.all;delete r.all;g.rl.push(r);
-    var n=RA[r.act][1]==='m'&&all?RREC.filter(function(x){return x.d<=10&&rMatch(r,x)}).length:0;g.nr={f:'from',op:'contains',v:'',act:'klass',arg:'beleid',all:true};
-    hood('POST /register/regels → 201 · getoetst aan het beleid'+(RA[r.act][1]==='d'?' · Sieve-script opnieuw gegenereerd':' · '+n+' berichten aangevuld, met de regel als bron'));
-    toast(RA[r.act][1]==='d'?'Regel aangezet. Hij geldt voor nieuwe berichten.':n===1?'Regel aangezet. 1 bericht aangevuld.':'Regel aangezet. '+n+' berichten aangevuld.');render()},
+  rnew:function(){RG().dlg={mode:'new',id:null,d:{n:'',f:'from',op:'contains',v:'',act:'klass',arg:'beleid',on:true,lvl:'mij'}};rdShow()},
+  ropen:function(d){var r=rById(d.id);if(!r)return;RG().dlg={mode:r.lvl==='mij'?'edit':'view',id:r.id,run:d.v==='run',d:{n:r.n,f:r.f,op:r.op,v:r.v,act:r.act,arg:r.arg,on:r.on,lvl:r.lvl}};hood('GET /register/regels/'+r.id+' → 200');rdShow()},
+  rdx:function(){RG().dlg=null;closeDlg()},
+  rdsave:function(dd){var g=RG(),R=g.dlg,d=R.d,err=rCheck(d,'mij');if(err){toast(err);return}
+    var r=R.id?rById(R.id):{id:'p'+(g.rl.filter(function(x){return x.lvl==='mij'}).length+1),lvl:'mij'};if(!R.id){while(rById(r.id))r.id+='b';g.rl.push(r)}
+    r.f=d.f;r.op=d.op;r.v=d.v.trim();r.act=d.act;r.arg=d.arg;r.on=!!d.on;r.n=(d.n||'').trim()||r.v;
+    var kd=RA[r.act][1]==='d',n=dd.v==='run'?rRun(r):-1;
+    if(n<0)hood((R.id?'PUT':'POST')+' /register/regels/'+r.id+' → '+(R.id?'200':'201')+' · getoetst aan het beleid'+(kd?' · Sieve-script opnieuw gegenereerd':''));
+    g.dlg=null;closeDlg();toast(n<0?(R.id?'Regel opgeslagen. Hij geldt voor nieuwe berichten.':'Regel aangemaakt. Hij geldt voor nieuwe berichten.'):n===1?'Opgeslagen en toegepast op 1 bericht.':'Opgeslagen en toegepast op '+n+' berichten.');render()},
+  rdrun:function(){var g=RG(),r=rById(g.dlg.id);if(!r)return;var n=rRun(r);g.dlg=null;closeDlg();toast(n===1?'Toegepast op 1 bericht.':'Toegepast op '+n+' berichten.');render()},
+  rddel:function(){var g=RG(),r=rById(g.dlg.id);if(!r||r.lvl!=='mij')return;g.rl=g.rl.filter(function(x){return x!==r});g.dlg=null;closeDlg();hood('DELETE /register/regels/'+r.id+' → 204 · aangevulde berichten blijven zoals ze zijn');toast('Regel verwijderd. Berichten die hij al heeft aangevuld, blijven zoals ze zijn.');render()},
   mlkdel:function(d){var m=D().meta,k=d.k,v=d.v;if(m.rby)delete m.rby[k==='zaak'?'zaak':'dos:'+v];if(k==='zaak')m.zaak='';else m.doss=m.doss.filter(function(x){return x!==v});
     hood(k==='zaak'?'DELETE /zaken/api/v1/zaakinformatieobjecten/… → 204 · kenmerk verwijderd uit het register':'Register: verwijzing ingetrokken {dossier: '+v+', object: '+m.id.slice(0,8)+'}');toast('Ontkoppeld · '+v);render();var f=$('f-'+k);if(f)f.focus()},
   gsel:function(d){S.gab.sel=d.m;hood('CardDAV GET /gab/… → 200 · alleen de gedeelde velden');render()},
@@ -2907,7 +2950,7 @@ document.addEventListener('mouseup',function(e){
 });
 function mlkFocus(){var f=$('f-'+S.lk.k);if(f){f.focus();var n=f.value.length;f.setSelectionRange(n,n)}}
 document.addEventListener('keydown',function(e){
-  if(e.key==='Escape'&&$('layer').innerHTML){closeDlg();return}
+  if(e.key==='Escape'&&$('layer').innerHTML){if(S.rg)S.rg.dlg=null;closeDlg();return}
   var t=e.target;
   if(t.dataset&&t.dataset.mlk&&S.lk.k===t.dataset.mlk){var it=S.lk.busy?[]:mlkItems(S.lk.k,S.lk.q),k=t.dataset.mlk;
     if((e.key==='ArrowDown'||e.key==='ArrowUp')&&it.length){e.preventDefault();S.lk.i=(S.lk.i+(e.key==='ArrowDown'?1:it.length-1))%it.length;render();mlkFocus();return}
@@ -2923,15 +2966,15 @@ document.addEventListener('input',function(e){
   if(t.dataset.mlk){var k=t.dataset.mlk;S.lk={k:k,q:t.value,i:0,busy:t.value.trim().length>=2};render();mlkFocus();clearTimeout(window.__mlkT);
     if(S.lk.busy)window.__mlkT=setTimeout(function(){if(S.lk.k!==k)return;S.lk.busy=false;var n=mlkItems(k,S.lk.q).length;hood(k==='zaak'?'GET /zaken/api/v1/zaken?omschrijving="'+S.lk.q.trim()+'" (ZGW Zaken API) → '+n+' zaken':'GET /register/dossiers?q="'+S.lk.q.trim()+'" → '+n+' dossiers · alleen dossiers waar je bij mag');render();mlkFocus()},matchMedia('(prefers-reduced-motion: reduce)').matches?0:280);
     return}
-  if(t.dataset.in==='nrv'||t.dataset.in==='nrarg'){RG().nr[t.dataset.in==='nrv'?'v':'arg']=t.value;var pp=t.selectionStart,iid=t.id;render();var x=$(iid);if(x){x.focus();x.setSelectionRange(pp,pp)}return}
+  if(t.dataset.in==='rd'&&RG().dlg){RG().dlg.d[t.dataset.k]=t.value;rdShow(t.id,t.selectionStart);return}
   if(t.dataset.in==='gq'){S.gab.q=t.value;var p=t.selectionStart;render();var g=$('gq');if(g){g.focus();g.setSelectionRange(p,p)}return}
   if(t.dataset.in==='naam'){m.naam=t.value;if(m.naamOk){m.naamOk=false;render();var n=$('f-naam');if(n){n.focus();n.setSelectionRange(n.value.length,n.value.length)}}}
 });
 document.addEventListener('change',function(e){
   var t=e.target;
   if(t.id==='lang'){setLang(t.value,true);render();return}
-  if(t.dataset.ch==='nr'){var nr=RG().nr;nr[t.dataset.k]=t.value;if(t.dataset.k==='act')nr.arg=rDefArg(t.value);render();var y=$(t.id);if(y)y.focus();return}
-  if(t.dataset.ch==='nrall'){RG().nr.all=t.checked;return}
+  if(t.dataset.ch==='rd'&&RG().dlg){var dd=RG().dlg.d;dd[t.dataset.k]=t.value;if(t.dataset.k==='act')dd.arg=rDefArg(t.value);rdShow(t.id);return}
+  if(t.dataset.ch==='rdon'&&RG().dlg){RG().dlg.d.on=t.checked;return}
   if(t.dataset.ch==='rvg'){var an=AN();an.g[t.dataset.id]=t.value;an.applied=false;render();return}
   if(t.dataset.ch==='cls'){D().meta.cls=t.value;D().meta.clsOk=false;render()}
   if(t.dataset.ch==='woo'){var mw=D().meta;mw.woo=t.value;hood('Metagegevens vastleggen {object: '+mw.id.slice(0,8)+'} · Woo-categorie: '+(t.value==='-'?'geen':t.value));render()}
