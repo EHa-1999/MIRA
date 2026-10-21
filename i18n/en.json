@@ -2345,5 +2345,8 @@
  "Naar": "To",
  "Adapter": "Adapter",
  "Component": "Component",
- "Contract": "Contract"
+ "Contract": "Contract",
+ "Selectie anonimiseren": "Anonymise selection",
+ "{0} plekken in het stuk": "{0} places in the document",
+ "soort": "type"
 }

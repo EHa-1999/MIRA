@@ -1425,9 +1425,19 @@ function brHtml(){
 }
 function brManual(){
   var ro=brRead();if(!brOn()&&!ro)return;var root=document.querySelector('.wd-desk');if(!root)return;
-  brItems().filter(function(p){return p.man}).forEach(function(p){var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),n;
-    while((n=w.nextNode())){var pe=n.parentElement;if(!pe||pe.closest('.plh,.phn,.rul,.lg,.tag,.callout,button,.fx'))continue;var i=n.nodeValue.indexOf(p.org);if(i<0)continue;
-      var r=document.createRange();r.setStart(n,i);r.setEnd(n,i+p.org.length);var t=document.createElement('template');t.innerHTML=ro?brRo(p):brSpan(p);var el=t.content.firstChild;if(!el.hasAttribute('data-notr'))el.textContent=tr(el.textContent);r.deleteContents();r.insertNode(el);break}});
+  var BLK='p,li,h1,h2,h3,h4,h5,h6,td,th,dd,dt,figcaption,blockquote,div,section';
+  brItems().filter(function(p){return p.man}).forEach(function(p){
+    var key=p.org.replace(/\s+/g,' ').trim();if(key.length<2)return;
+    /* alle tekst van het stuk als één reeks, per blok gescheiden, met witruimte samengevoegd */
+    var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),n,str='',map=[],blk0=null,sp=false;
+    while((n=w.nextNode())){var pe=n.parentElement;
+      if(!pe||pe.closest('.plh,.phn,.rul,.lg,.tag,.callout,button,.fx')){if(str.slice(-1)!=='\u0000'){str+='\u0000';map.push(null)}sp=false;continue}
+      var bk=pe.closest(BLK);if(bk!==blk0){str+='\u0000';map.push(null);blk0=bk;sp=false}
+      var v=n.nodeValue;for(var i=0;i<v.length;i++){if(/\s/.test(v[i])){if(sp)continue;sp=true;str+=' '}else{sp=false;str+=v[i]}map.push([n,i])}}
+    var rs=[],k=0;while((k=str.indexOf(key,k))>=0){var a=map[k],z=map[k+key.length-1];if(a&&z){var r=document.createRange();r.setStart(a[0],a[1]);r.setEnd(z[0],z[1]+1);rs.push(r)}k+=key.length}
+    /* van achter naar voren vervangen, zodat de eerdere plekken kloppen; alleen de eerste houdt het anker */
+    rs.reverse().forEach(function(r,j){var t=document.createElement('template');t.innerHTML=ro?brRo(p):brSpan(p);var el=t.content.firstChild;if(j<rs.length-1)el.removeAttribute('id');if(!el.hasAttribute('data-notr'))el.textContent=tr(el.textContent);r.deleteContents();r.insertNode(el)});
+  });
 }
 /* gegevensset in het rekenblad: 40 verzonnen deelnemers */
 var PSC=[['naam','Naam',1,'N','trim · NFC · kleine letters'],['geb','Geboortedatum',1,'D','ISO 8601'],['adres','Adres',1,'A','trim · NFC · kleine letters'],['pc','Postcode',1,'C','zonder spatie · hoofdletters'],['iban','IBAN',1,'X','zonder spaties · hoofdletters'],['inleg','Inleg (€)',0],['status','Status',0]];
@@ -2739,7 +2749,7 @@ var ACT={
   brtog:function(d){var b=BR(),p=brItems().filter(function(x){return x.id===d.id})[0];if(!p)return;b.ppl=p.ppl<=b.ppl?p.ppl-1:Math.max(b.ppl,p.ppl);b.exp=p.id;render();var c=$('bc-'+p.id);if(c)c.scrollIntoView({block:'nearest'})},
   brok:function(){var b=BR(),n=new Date();b.ok={by:me().split(', ')[0],at:TODAY+' '+('0'+n.getHours()).slice(-2)+':'+('0'+n.getMinutes()).slice(-2)};b.pick=null;toast('Bevestigd. Wie niet bevoegd is, ziet voortaan de plaatshouders en niet de waarden.');render()},
   broff:function(d){var b=BR(),i=-1;b.ok=null;b.man.forEach(function(m,j){if(m.id===d.id)i=j});if(i>=0){b.man.splice(i,1);b.exp=null}else b.on[d.id]=!b.on[d.id];render()},
-  bradd:function(){var b=BR(),ty=$('br-ty').value,id='x'+(b.man.length+1)+'-'+b.pick.t.length;b.man.push({id:id,t:b.pick.t,ty:ty});b.ok=null;b.pick=null;b.exp=id;render()},
+  bradd:function(){var b=BR(),ty=$('br-ty').value,id='x'+(b.man.length+1)+'-'+b.pick.t.length;b.man.push({id:id,t:b.pick.t,ty:ty});b.ok=null;b.pick=null;b.exp=id;render();var sm=matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth',c=$('bc-'+id);if(c)c.scrollIntoView({block:'center',behavior:sm});hood('Selectie anonimiseren {soort: '+ty+'} · '+document.querySelectorAll('.wd-desk .plh[data-id="'+id+'"]').length+' plekken in het stuk')},
   brcancel:function(){BR().pick=null;render()},
   sheet:function(d){D('rekenblad').sheet=+d.i;S.sel=null;S.open=null;TOPV=true;render()},
   pscol:function(d){var p=PS();if(p.on)return;p.sel[d.k]=!p.sel[d.k];render()},
@@ -2792,8 +2802,8 @@ document.addEventListener('click',function(e){
 });
 document.addEventListener('mouseup',function(e){
   if(!brSelOk()||!e.target.closest||!e.target.closest('.wd-desk')||e.target.closest('[data-act]'))return;
-  var sel=window.getSelection(),x=sel?String(sel).trim():'';
-  if(x.length<2||x.length>80||/\n/.test(x))return;
+  var sel=window.getSelection(),raw=sel?String(sel):'',x=raw.replace(/\s+/g,' ').trim();
+  if(x.length<2||x.length>200||/\n\s*\n/.test(raw.trim()))return;
   var was=AN().sub!=='bron';AN().sub='bron';
   var hit=brItems().filter(function(p){return p.org===x})[0];
   if(hit){BR().pick=null;BR().exp=hit.id;render();var cd=document.getElementById('bc-'+hit.id);if(cd)cd.scrollIntoView({block:'center'});toast(hit.on?'Dit staat al in de lijst en is geanonimiseerd.':'Dit staat al in de lijst. Kies Toch anonimiseren.');return}

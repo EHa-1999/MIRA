@@ -2366,5 +2366,8 @@
  "paneelzijde": "côté panneau",
  "Terugval": "Repli",
  "Naar": "Vers",
- "Component": "Composant"
+ "Component": "Composant",
+ "Selectie anonimiseren": "Anonymiser la sélection",
+ "{0} plekken in het stuk": "{0} emplacements dans le document",
+ "soort": "type"
 }

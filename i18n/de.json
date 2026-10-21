@@ -2365,5 +2365,8 @@
  "Terugval": "Rückfallebene",
  "Naar": "Nach",
  "Adapter": "Adapter",
- "Component": "Komponente"
+ "Component": "Komponente",
+ "Selectie anonimiseren": "Auswahl anonymisieren",
+ "{0} plekken in het stuk": "{0} Stellen im Dokument",
+ "soort": "Art"
 }

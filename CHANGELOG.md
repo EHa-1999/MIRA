@@ -2,6 +2,11 @@
 
 Het versienummer staat in `VERSION`. Bij elke nieuwe versie: nummer ophogen, hier een regel toevoegen, `python3 build.py` draaien.
 
+## Versie 38 · 21-10-2026
+- Zelf geselecteerde tekst anonimiseren werkt weer in de tekst: de placeholder vervangt de zinsnede op elke plek in het stuk, ook als die over opmaak heen loopt. Eerder werd alleen de eerste vindplaats vervangen, vaak in de titel in plaats van op de plek die je selecteerde.
+- Na Anonimiseren springt het paneel naar het item van je selectie.
+- Een selectie mag nu langer zijn, tot een paar regels binnen één alinea.
+
 ## Versie 37 · 21-10-2026
 - Architectuur is terug naar de opbouw van versie 35: de vier omgevingen van de assistent en de handelingen uit de demo. De inkomende stroom uit versie 36 is weggehaald.
 
