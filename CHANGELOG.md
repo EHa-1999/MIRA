@@ -2,6 +2,11 @@
 
 Het versienummer staat in `VERSION`. Bij elke nieuwe versie: nummer ophogen, hier een regel toevoegen, `python3 build.py` draaien.
 
+## Versie 39 · 21-10-2026
+- Regels in de mailomgeving, gelijk aan de demo over e-mailarchivering: van de organisatie, het team en de medewerker zelf. Een regel zet metagegevens bij binnenkomst en verzending, draait bij het register en valt onder dezelfde bedenktijd. Een nieuwe regel test je eerst op je berichten; persoonlijk maken, weggooien en doorsturen naar buiten de gemeenten kan niet.
+- Een regel van het team koppelt het bericht aan de provincie bij verzending aan het projectdossier. Bij Wie zegt dat? staat de regel als bron.
+- Wat bij aflevering moet gebeuren (map, markering, afwezigheid) schrijft XENA als Sieve-script. In tekst, rekenblad en presentatie heeft het paneel geen regels.
+
 ## Versie 38 · 21-10-2026
 - Zelf geselecteerde tekst anonimiseren werkt weer in de tekst: de placeholder vervangt de zinsnede op elke plek in het stuk, ook als die over opmaak heen loopt. Eerder werd alleen de eerste vindplaats vervangen, vaak in de titel in plaats van op de plek die je selecteerde.
 - Na Anonimiseren springt het paneel naar het item van je selectie.
