@@ -2,6 +2,9 @@
 
 Het versienummer staat in `VERSION`. Bij elke nieuwe versie: nummer ophogen, hier een regel toevoegen, `python3 build.py` draaien.
 
+## Versie 42 · 21-10-2026
+- Een selectie die over een placeholder heen loopt, neemt het origineel daarachter mee. Selecteer je “[PERSOON 3] ([ADRES 1]) vreest geluidsoverlast”, dan anonimiseert de assistent de hele zinsnede, met de naam en het adres zoals ze in het origineel staan.
+
 ## Versie 41 · 21-10-2026
 - De-anonimiseer werkt per item: alleen die vondst wordt in het voorbeeld getoond, met Weer anonimiseren om terug te gaan. Bekijk op niveau zet alles weer op het gekozen niveau.
 - Zelf geselecteerde tekst wordt ook vervangen als hij een gemarkeerde vondst raakt, zoals “voorzitter J. Smit”. Een selectie die begint of eindigt in een gemarkeerd woord wordt nu ook herkend.

@@ -2476,5 +2476,6 @@
  "voorbeeld: vondst getoond": "preview: finding shown",
  "voorbeeld: vondst weer afgeschermd": "preview: finding masked again",
  "vondst": "finding",
- "alleen dit item": "this item only"
+ "alleen dit item": "this item only",
+ "Je selectie loopt over een placeholder heen. De assistent neemt het origineel daarachter mee.": "Your selection runs across a placeholder. The assistant includes the original behind it."
 }

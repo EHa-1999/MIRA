@@ -2497,5 +2497,6 @@
  "voorbeeld: vondst getoond": "aperçu : élément affiché",
  "voorbeeld: vondst weer afgeschermd": "aperçu : élément de nouveau masqué",
  "vondst": "élément",
- "alleen dit item": "cet élément seulement"
+ "alleen dit item": "cet élément seulement",
+ "Je selectie loopt over een placeholder heen. De assistent neemt het origineel daarachter mee.": "Votre sélection passe sur un espace réservé. L'assistant reprend l'original qui se trouve derrière."
 }
