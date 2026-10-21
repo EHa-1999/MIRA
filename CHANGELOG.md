@@ -2,6 +2,10 @@
 
 Het versienummer staat in `VERSION`. Bij elke nieuwe versie: nummer ophogen, hier een regel toevoegen, `python3 build.py` draaien.
 
+## Versie 41 · 21-10-2026
+- De-anonimiseer werkt per item: alleen die vondst wordt in het voorbeeld getoond, met Weer anonimiseren om terug te gaan. Bekijk op niveau zet alles weer op het gekozen niveau.
+- Zelf geselecteerde tekst wordt ook vervangen als hij een gemarkeerde vondst raakt, zoals “voorzitter J. Smit”. Een selectie die begint of eindigt in een gemarkeerd woord wordt nu ook herkend.
+
 ## Versie 40 · 21-10-2026
 - Regels maken en wijzigen in een eigen venster van de assistent, gelijk aan de demo over e-mailarchivering. Het venster toont welke berichten in de postbus aan de regel voldoen en wat er per bericht verandert.
 - Toepassen: een regel gaat ook over de berichten die er al zijn, metagegevens alleen binnen de bedenktijd. Regels van de organisatie en het team kun je bekijken en toepassen, niet wijzigen.

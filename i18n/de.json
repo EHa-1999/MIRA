@@ -2490,5 +2490,11 @@
  "naar map": "in Ordner",
  "venster(pagina)": "fenster(seite)",
  "Een eigen venster van de assistent openen, zoals de beoordelingsweergave of de regels. Office: de Dialog API. Outlook (klassiek): een dialoogvenster van de COM-code. Thunderbird: windows.create. Zonder dit vermogen opent de pagina in de browser.": "Ein eigenes Fenster des Assistenten öffnen, etwa die Prüfansicht oder die Regeln. Office: die Dialog API. Outlook (klassisch): ein Dialogfenster des COM-Codes. Thunderbird: windows.create. Ohne diese Fähigkeit öffnet sich die Seite im Browser.",
- "IMAP, CardDAV (geen ManageSieve: de regels schrijft XENA)": "IMAP, CardDAV (kein ManageSieve: die Regeln schreibt XENA)"
+ "IMAP, CardDAV (geen ManageSieve: de regels schrijft XENA)": "IMAP, CardDAV (kein ManageSieve: die Regeln schreibt XENA)",
+ "Weer anonimiseren": "Wieder anonymisieren",
+ "De-anonimiseer": "De-anonymisieren",
+ "voorbeeld: vondst getoond": "Vorschau: Fund angezeigt",
+ "voorbeeld: vondst weer afgeschermd": "Vorschau: Fund wieder verdeckt",
+ "vondst": "Fund",
+ "alleen dit item": "nur dieses Element"
 }
