@@ -2498,5 +2498,11 @@
  "voorbeeld: vondst weer afgeschermd": "aperçu : élément de nouveau masqué",
  "vondst": "élément",
  "alleen dit item": "cet élément seulement",
- "Je selectie loopt over een placeholder heen. De assistent neemt het origineel daarachter mee.": "Votre sélection passe sur un espace réservé. L'assistant reprend l'original qui se trouve derrière."
+ "Je selectie loopt over een placeholder heen. De assistent neemt het origineel daarachter mee.": "Votre sélection passe sur un espace réservé. L'assistant reprend l'original qui se trouve derrière.",
+ "Nextcloud Mail, de webmail van het e-mailarchief": "Nextcloud Mail, la messagerie web de l'archive e-mail",
+ "Nextcloud-app in de zijbalk": "application Nextcloud dans la barre latérale",
+ "paneel en CardDAV, zonder installatie op de werkplek": "volet et CardDAV, sans installation sur le poste de travail",
+ "Roundcube": "Roundcube",
+ "plugin (PHP en JavaScript)": "plugin (PHP et JavaScript)",
+ "paneel en CardDAV, voor gemeenten die Roundcube al gebruiken": "volet et CardDAV, pour les communes qui utilisent déjà Roundcube"
 }

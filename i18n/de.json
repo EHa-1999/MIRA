@@ -2497,5 +2497,11 @@
  "voorbeeld: vondst weer afgeschermd": "Vorschau: Fund wieder verdeckt",
  "vondst": "Fund",
  "alleen dit item": "nur dieses Element",
- "Je selectie loopt over een placeholder heen. De assistent neemt het origineel daarachter mee.": "Ihre Auswahl reicht über einen Platzhalter. Der Assistent nimmt das Original dahinter mit."
+ "Je selectie loopt over een placeholder heen. De assistent neemt het origineel daarachter mee.": "Ihre Auswahl reicht über einen Platzhalter. Der Assistent nimmt das Original dahinter mit.",
+ "Nextcloud Mail, de webmail van het e-mailarchief": "Nextcloud Mail, das Webmail des E-Mail-Archivs",
+ "Nextcloud-app in de zijbalk": "Nextcloud-App in der Seitenleiste",
+ "paneel en CardDAV, zonder installatie op de werkplek": "Seitenleiste und CardDAV, ohne Installation am Arbeitsplatz",
+ "Roundcube": "Roundcube",
+ "plugin (PHP en JavaScript)": "Plugin (PHP und JavaScript)",
+ "paneel en CardDAV, voor gemeenten die Roundcube al gebruiken": "Seitenleiste und CardDAV, für Gemeinden, die Roundcube bereits nutzen"
 }

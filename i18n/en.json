@@ -2477,5 +2477,11 @@
  "voorbeeld: vondst weer afgeschermd": "preview: finding masked again",
  "vondst": "finding",
  "alleen dit item": "this item only",
- "Je selectie loopt over een placeholder heen. De assistent neemt het origineel daarachter mee.": "Your selection runs across a placeholder. The assistant includes the original behind it."
+ "Je selectie loopt over een placeholder heen. De assistent neemt het origineel daarachter mee.": "Your selection runs across a placeholder. The assistant includes the original behind it.",
+ "Nextcloud Mail, de webmail van het e-mailarchief": "Nextcloud Mail, the webmail of the email archive",
+ "Nextcloud-app in de zijbalk": "Nextcloud app in the sidebar",
+ "paneel en CardDAV, zonder installatie op de werkplek": "panel and CardDAV, without installation on the workstation",
+ "Roundcube": "Roundcube",
+ "plugin (PHP en JavaScript)": "plugin (PHP and JavaScript)",
+ "paneel en CardDAV, voor gemeenten die Roundcube al gebruiken": "panel and CardDAV, for municipalities already using Roundcube"
 }

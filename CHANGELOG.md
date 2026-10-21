@@ -2,6 +2,9 @@
 
 Het versienummer staat in `VERSION`. Bij elke nieuwe versie: nummer ophogen, hier een regel toevoegen, `python3 build.py` draaien.
 
+## Versie 43 · 21-10-2026
+- De tabel per mailomgeving in Techniek kent nu ook Nextcloud Mail (de webmail van het e-mailarchief, als Nextcloud-app in de zijbalk) en Roundcube (als plugin), gelijk aan de demo over e-mailarchivering.
+
 ## Versie 42 · 21-10-2026
 - Een selectie die over een placeholder heen loopt, neemt het origineel daarachter mee. Selecteer je “[PERSOON 3] ([ADRES 1]) vreest geluidsoverlast”, dan anonimiseert de assistent de hele zinsnede, met de naam en het adres zoals ze in het origineel staan.
 
