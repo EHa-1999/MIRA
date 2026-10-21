@@ -2,6 +2,13 @@
 
 Het versienummer staat in `VERSION`. Bij elke nieuwe versie: nummer ophogen, hier een regel toevoegen, `python3 build.py` draaien.
 
+## Versie 44 · 21-10-2026
+- Waarmerken maakt nu onderscheid tussen drie soorten bewijs, elk met een eigen handeling:
+  - Tijdstempel: automatisch bij vaststellen of verzenden; de medewerker doet niets.
+  - Zegel namens de afdeling of de organisatie: wie zegelbevoegd is bevestigt met de tweede factor van de eigen inlog; wie dat niet is vraagt het zegel aan bij de griffie. Een demoschakelaar maakt Noor zegelbevoegd, een demoknop laat de zegelbevoegde het verzoek afhandelen.
+  - Waarmerk namens de auteur: een gekwalificeerde elektronische handtekening, te bevestigen in de app van de TSP op de telefoon. De inlog bij de gemeente is daarvoor niet genoeg.
+- Het resultaat toont waarmee is bevestigd. Gelijk aan versie 21 van de demo over e-mailarchivering; de uitwerking staat in VERA.
+
 ## Versie 43 · 21-10-2026
 - De tabel per mailomgeving in Techniek kent nu ook Nextcloud Mail (de webmail van het e-mailarchief, als Nextcloud-app in de zijbalk) en Roundcube (als plugin), gelijk aan de demo over e-mailarchivering.
 
